@@ -9,7 +9,7 @@
 <style>
 :root{--bg:#04020e;--gold:#c9952a;--gold-light:#f0c96a;--gold-dim:#7a5c1a;--gold-glow:rgba(201,149,42,0.35);--purple:#7c3aed;--rose:#e879a0;--green:#4ade80;--white:#f5f0ea;--muted:#c0bbd0;--nbA:rgba(124,58,237,.18);--nbB:rgba(45,212,191,.07);--nbC:rgba(42,15,107,.35);}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;}
+html{scroll-behavior:smooth;overflow-x:hidden;}
 body{background:var(--bg);color:var(--white);font-family:'Noto Serif TC',serif;min-height:100vh;overflow-x:hidden;}
 #starCanvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;}
 .nebula{position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse 55% 45% at 15% 60%,var(--nbA) 0%,transparent 65%),radial-gradient(ellipse 45% 55% at 85% 30%,var(--nbB) 0%,transparent 55%),radial-gradient(ellipse 70% 40% at 50% 90%,var(--nbC) 0%,transparent 60%);}
@@ -332,7 +332,7 @@ body{background:var(--bg);color:var(--white);font-family:'Noto Serif TC',serif;m
 .cna-text{font-size:.88rem;color:var(--white);line-height:1.8;letter-spacing:.07em;}
 .cna-action{font-size:.78rem;color:var(--gold-light);letter-spacing:.1em;margin-top:4px;font-style:italic;}
 /* THEME PICKER */
-.theme-picker{position:fixed;bottom:24px;right:18px;z-index:300;display:flex;flex-direction:column;align-items:flex-end;gap:10px;}
+.theme-picker{position:fixed;bottom:24px;right:18px;z-index:9999;display:flex;flex-direction:column;align-items:flex-end;gap:10px;}
 .tp-toggle{width:42px;height:42px;border-radius:50%;background:rgba(10,4,28,.85);border:1px solid rgba(201,149,42,.45);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.2rem;backdrop-filter:blur(10px);transition:all .3s ease;box-shadow:0 4px 20px rgba(0,0,0,.5);}
 .tp-toggle:hover{border-color:var(--gold);box-shadow:0 0 18px var(--gold-glow);}
 .tp-panel{display:flex;flex-direction:column;gap:8px;background:rgba(8,3,22,.9);border:1px solid rgba(201,149,42,.25);border-radius:14px;padding:12px 10px;backdrop-filter:blur(16px);box-shadow:0 8px 40px rgba(0,0,0,.6);animation:tpSlide .25s cubic-bezier(.34,1.56,.64,1) both;}
