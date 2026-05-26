@@ -7,12 +7,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;700&family=Cinzel+Decorative:wght@400;700&family=IM+Fell+English+SC&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
-:root{--bg:#04020e;--gold:#c9952a;--gold-light:#f0c96a;--gold-dim:#7a5c1a;--gold-glow:rgba(201,149,42,0.35);--purple:#7c3aed;--rose:#e879a0;--green:#4ade80;--white:#f5f0ea;--muted:#c0bbd0;}
+:root{--bg:#04020e;--gold:#c9952a;--gold-light:#f0c96a;--gold-dim:#7a5c1a;--gold-glow:rgba(201,149,42,0.35);--purple:#7c3aed;--rose:#e879a0;--green:#4ade80;--white:#f5f0ea;--muted:#c0bbd0;--nbA:rgba(124,58,237,.18);--nbB:rgba(45,212,191,.07);--nbC:rgba(42,15,107,.35);}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
 body{background:var(--bg);color:var(--white);font-family:'Noto Serif TC',serif;min-height:100vh;overflow-x:hidden;}
 #starCanvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;}
-.nebula{position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse 55% 45% at 15% 60%,rgba(124,58,237,.18) 0%,transparent 65%),radial-gradient(ellipse 45% 55% at 85% 30%,rgba(45,212,191,.07) 0%,transparent 55%),radial-gradient(ellipse 70% 40% at 50% 90%,rgba(42,15,107,.35) 0%,transparent 60%);}
+.nebula{position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse 55% 45% at 15% 60%,var(--nbA) 0%,transparent 65%),radial-gradient(ellipse 45% 55% at 85% 30%,var(--nbB) 0%,transparent 55%),radial-gradient(ellipse 70% 40% at 50% 90%,var(--nbC) 0%,transparent 60%);}
 .page{position:relative;z-index:1;max-width:1020px;margin:0 auto;padding:48px 20px 80px;display:flex;flex-direction:column;align-items:center;gap:30px;}
 /* HEADER */
 .header{text-align:center;animation:riseIn 1.2s cubic-bezier(.22,1,.36,1) both;}
@@ -331,6 +331,20 @@ body{background:var(--bg);color:var(--white);font-family:'Noto Serif TC',serif;m
 .cna-label{font-size:.7rem;color:var(--gold);letter-spacing:.35em;}
 .cna-text{font-size:.88rem;color:var(--white);line-height:1.8;letter-spacing:.07em;}
 .cna-action{font-size:.78rem;color:var(--gold-light);letter-spacing:.1em;margin-top:4px;font-style:italic;}
+/* THEME PICKER */
+.theme-picker{position:fixed;bottom:24px;right:18px;z-index:300;display:flex;flex-direction:column;align-items:flex-end;gap:10px;}
+.tp-toggle{width:42px;height:42px;border-radius:50%;background:rgba(10,4,28,.85);border:1px solid rgba(201,149,42,.45);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.2rem;backdrop-filter:blur(10px);transition:all .3s ease;box-shadow:0 4px 20px rgba(0,0,0,.5);}
+.tp-toggle:hover{border-color:var(--gold);box-shadow:0 0 18px var(--gold-glow);}
+.tp-panel{display:flex;flex-direction:column;gap:8px;background:rgba(8,3,22,.9);border:1px solid rgba(201,149,42,.25);border-radius:14px;padding:12px 10px;backdrop-filter:blur(16px);box-shadow:0 8px 40px rgba(0,0,0,.6);animation:tpSlide .25s cubic-bezier(.34,1.56,.64,1) both;}
+.tp-panel.hidden{display:none!important;}
+@keyframes tpSlide{from{opacity:0;transform:translateY(10px) scale(.95);}to{opacity:1;transform:translateY(0) scale(1);}}
+.tp-label{font-size:.6rem;color:rgba(201,149,42,.6);letter-spacing:.3em;text-align:center;margin-bottom:2px;}
+.tp-swatch{width:38px;height:38px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .25s ease;position:relative;display:flex;align-items:center;justify-content:center;}
+.tp-swatch:hover{transform:scale(1.18);box-shadow:0 0 14px var(--gold-glow);}
+.tp-swatch.active{border-color:var(--gold-light);box-shadow:0 0 0 2px rgba(240,201,106,.35);}
+.tp-swatch::after{content:attr(data-name);position:absolute;right:48px;top:50%;transform:translateY(-50%);white-space:nowrap;font-size:.62rem;color:var(--white);background:rgba(8,3,22,.92);border:1px solid rgba(201,149,42,.2);border-radius:6px;padding:4px 10px;opacity:0;pointer-events:none;transition:opacity .2s ease;letter-spacing:.12em;}
+.tp-swatch:hover::after{opacity:1;}
+@media(max-width:640px){.theme-picker{bottom:16px;right:12px;}.tp-toggle{width:38px;height:38px;font-size:1rem;}}
 </style>
 </head>
 <body>
@@ -410,6 +424,19 @@ body{background:var(--bg);color:var(--white);font-family:'Noto Serif TC',serif;m
     <button class="hist-toggle-btn" onclick="toggleHistory()">📜 &nbsp; 最近占卜紀錄</button>
     <div id="histPanel" class="hist-panel hidden"></div>
   </div>
+</div>
+
+<!-- THEME PICKER -->
+<div class="theme-picker" id="themePicker">
+  <div class="tp-panel hidden" id="tpPanel">
+    <p class="tp-label">✦ 主題色彩 ✦</p>
+    <div class="tp-swatch" id="ts-midnight" data-name="深夜神諭" style="background:radial-gradient(circle at 35% 40%,#2d0a6e,#04020e)" onclick="applyTheme('midnight')"></div>
+    <div class="tp-swatch" id="ts-forest"   data-name="森林精靈" style="background:radial-gradient(circle at 35% 40%,#14532d,#020e04)" onclick="applyTheme('forest')"></div>
+    <div class="tp-swatch" id="ts-rose"     data-name="粉紅夢境" style="background:radial-gradient(circle at 35% 40%,#831843,#0e0208)" onclick="applyTheme('rose')"></div>
+    <div class="tp-swatch" id="ts-moon"     data-name="月亮女神" style="background:radial-gradient(circle at 35% 40%,#1e3a5f,#020814)" onclick="applyTheme('moon')"></div>
+    <div class="tp-swatch" id="ts-crystal"  data-name="水晶宮殿" style="background:radial-gradient(circle at 35% 40%,#4c1d95,#07020e)" onclick="applyTheme('crystal')"></div>
+  </div>
+  <button class="tp-toggle" onclick="toggleThemePicker()" title="更換主題色彩">🎨</button>
 </div>
 
 <!-- SCREENSHOT MODAL -->
@@ -1333,6 +1360,57 @@ function reshuffleCards(){
   document.querySelectorAll('.slot').forEach((s,i)=>{s.style.animationDelay=`${i*.06}s`;s.classList.add('shuffle-out');});
   setTimeout(()=>{playShuffleAnim(()=>{renderSpread();isShuffling=false;});},520);
 }
+
+// ─── THEME SWITCHER ───────────────────────────────────────────────
+const THEMES={
+  midnight:{
+    '--bg':'#04020e','--gold':'#c9952a','--gold-light':'#f0c96a','--gold-dim':'#7a5c1a',
+    '--gold-glow':'rgba(201,149,42,0.35)','--purple':'#7c3aed','--rose':'#e879a0',
+    '--green':'#4ade80','--white':'#f5f0ea','--muted':'#c0bbd0',
+    '--nbA':'rgba(124,58,237,.18)','--nbB':'rgba(45,212,191,.07)','--nbC':'rgba(42,15,107,.35)'
+  },
+  forest:{
+    '--bg':'#020c04','--gold':'#4ade80','--gold-light':'#86efac','--gold-dim':'#16a34a',
+    '--gold-glow':'rgba(74,222,128,0.35)','--purple':'#22c55e','--rose':'#e879f9',
+    '--green':'#bef264','--white':'#f0fdf4','--muted':'#bbf7d0',
+    '--nbA':'rgba(34,197,94,.2)','--nbB':'rgba(163,230,53,.08)','--nbC':'rgba(2,30,10,.4)'
+  },
+  rose:{
+    '--bg':'#0e0208','--gold':'#f472b6','--gold-light':'#fbcfe8','--gold-dim':'#9d174d',
+    '--gold-glow':'rgba(244,114,182,0.35)','--purple':'#ec4899','--rose':'#fda4af',
+    '--green':'#f9a8d4','--white':'#fdf2f8','--muted':'#f9a8d4',
+    '--nbA':'rgba(236,72,153,.18)','--nbB':'rgba(249,168,212,.07)','--nbC':'rgba(74,4,42,.38)'
+  },
+  moon:{
+    '--bg':'#020814','--gold':'#94a3b8','--gold-light':'#e2e8f0','--gold-dim':'#475569',
+    '--gold-glow':'rgba(148,163,184,0.35)','--purple':'#3b82f6','--rose':'#93c5fd',
+    '--green':'#7dd3fc','--white':'#f8fafc','--muted':'#cbd5e1',
+    '--nbA':'rgba(59,130,246,.18)','--nbB':'rgba(125,211,252,.07)','--nbC':'rgba(2,8,50,.4)'
+  },
+  crystal:{
+    '--bg':'#07020e','--gold':'#a78bfa','--gold-light':'#ddd6fe','--gold-dim':'#6d28d9',
+    '--gold-glow':'rgba(167,139,250,0.35)','--purple':'#8b5cf6','--rose':'#c084fc',
+    '--green':'#e879f9','--white':'#faf5ff','--muted':'#d8b4fe',
+    '--nbA':'rgba(139,92,246,.25)','--nbB':'rgba(192,132,252,.1)','--nbC':'rgba(30,6,70,.42)'
+  }
+};
+let _tpOpen=false;
+function applyTheme(id){
+  const t=THEMES[id];if(!t)return;
+  const root=document.documentElement;
+  Object.entries(t).forEach(([k,v])=>root.style.setProperty(k,v));
+  localStorage.setItem('catTarotTheme',id);
+  document.querySelectorAll('.tp-swatch').forEach(s=>s.classList.remove('active'));
+  const sw=document.getElementById('ts-'+id);if(sw)sw.classList.add('active');
+}
+function toggleThemePicker(){
+  _tpOpen=!_tpOpen;
+  document.getElementById('tpPanel').classList.toggle('hidden',!_tpOpen);
+}
+(function initTheme(){
+  const saved=localStorage.getItem('catTarotTheme')||'midnight';
+  applyTheme(saved);
+})();
 
 // ─── INIT ─────────────────────────────────────────────────────────
 buildCatTabs();buildSpreadGrid();
