@@ -167,7 +167,54 @@ body{background:var(--bg);color:var(--white);font-family:'Noto Serif TC',serif;m
 .hidden{display:none !important;}
 @keyframes shuffleOut{0%{opacity:1;transform:scale(1) rotate(0);}40%{opacity:.5;transform:scale(.8) rotate(8deg) translateY(-20px);}100%{opacity:0;transform:scale(.6) rotate(-5deg) translateY(40px);}}
 .slot.shuffle-out{animation:shuffleOut .45s ease both !important;}
-@media(max-width:640px){.spread{gap:8px;}.reading-item{grid-template-columns:1fr;}.cat-tab{min-width:72px;padding:9px 10px;}.setup-panel{padding:22px 16px;}}
+/* touch: prevent double-tap zoom on cards */
+.card-wrap{touch-action:manipulation;}
+.begin-btn,.reshuffle-btn,.ghost-btn,.shot-btn,.sa-btn,.hist-toggle-btn,.co-add-btn,.co-rm-btn{touch-action:manipulation;}
+
+@media(max-width:640px){
+  .page{padding:28px 14px 60px;gap:22px;}
+  /* header */
+  .header-tagline{font-size:.82rem;}
+  /* setup */
+  .setup-panel{padding:20px 14px;gap:18px;}
+  /* category tabs — horizontal scroll, no wrap */
+  .category-tabs{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;padding-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+  .category-tabs::-webkit-scrollbar{display:none;}
+  .cat-tab{min-width:74px;flex-shrink:0;padding:9px 10px;}
+  /* spread grid — horizontal scroll */
+  .spread-grid{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;padding-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+  .spread-grid::-webkit-scrollbar{display:none;}
+  .spread-card{min-width:108px;flex-shrink:0;}
+  /* card text — bump up minimum readable size */
+  .card-name-text{font-size:clamp(.62rem,2.2vw,.75rem);}
+  .card-meaning-text{font-size:clamp(.52rem,1.8vw,.6rem);}
+  /* spread area */
+  .spread{gap:8px;padding:6px 0 12px;}
+  /* reading panel */
+  .reading-panel{padding:18px 14px;}
+  .reading-item{grid-template-columns:1fr;gap:6px;}
+  .ri-pos{flex-direction:row;flex-wrap:wrap;align-items:center;gap:6px;}
+  /* choice result */
+  .choice-item{grid-template-columns:1fr;gap:8px;}
+  .ci-right{flex-direction:row;justify-content:flex-start;align-items:center;gap:10px;}
+  .ci-bar-wrap{width:120px;}
+  /* conclusion */
+  .conclusion-panel{padding:20px 14px;}
+  .cn-part{gap:8px;}
+  /* screenshot modal */
+  .shot-modal{padding:12px;}
+  .shot-card{max-height:72vh;border-radius:12px;}
+  .shot-actions{flex-direction:column;align-items:stretch;gap:8px;width:100%;max-width:500px;}
+  .sa-btn{text-align:center;padding:13px 20px;font-size:.82rem;}
+  /* history */
+  .hist-panel{padding:14px 12px;}
+  .he-summary{padding:10px 12px;}
+  .he-detail{padding:0 12px 10px;}
+  /* cta row */
+  .cta-row{gap:10px;}
+  .ghost-btn{padding:11px 18px;font-size:.78rem;}
+  .reshuffle-btn{padding:11px 24px;}
+}
 /* SHUFFLE OVERLAY */
 .shuffle-overlay{width:100%;min-height:230px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;padding:20px 0;}
 .sov-pile{position:relative;width:130px;height:170px;}
@@ -792,14 +839,23 @@ function getPositions(){
   }
   return getSpread(selCatId,selSpreadId)?.positions||[];
 }
+function calcCardWidth(n,defaultPx){
+  const sw=window.innerWidth;
+  if(sw>=640)return defaultPx+'px';
+  // mobile: fit cleanly — max 3 per row for n≥3, else n per row
+  const perRow=n<=2?n:n===4?2:3;
+  const w=Math.floor((sw-40-(perRow-1)*8)/perRow);
+  return Math.min(w,defaultPx)+'px';
+}
 function renderSpread(){
   const positions=getPositions();
   const sp=getSpread(selCatId,selSpreadId);
   drawnCards=drawN(positions.length);flippedSet.clear();
   const el=document.getElementById('spread');
-  let cw=sp?.cardWidth||'140px';
-  if(selSpreadId==='choice'){const n=positions.length;cw=n<=2?'170px':n===3?'150px':'135px';}
-  el.style.setProperty('--card-w',cw);
+  const n=positions.length;
+  let defPx=parseInt(sp?.cardWidth||'140');
+  if(selSpreadId==='choice'){defPx=n<=2?170:n===3?150:135;}
+  el.style.setProperty('--card-w',calcCardWidth(n,defPx));
   el.innerHTML=drawnCards.map((card,i)=>buildSlot(card,i,positions[i])).join('');
   updateReading();
 }
