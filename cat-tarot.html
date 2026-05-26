@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>貓咪塔羅 · 貓靈神諭</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;700&family=Cinzel+Decorative:wght@400;700&family=IM+Fell+English+SC&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+:root{--bg:#04020e;--gold:#c9952a;--gold-light:#f0c96a;--gold-dim:#7a5c1a;--gold-glow:rgba(201,149,42,0.35);--purple:#7c3aed;--rose:#e879a0;--green:#4ade80;--white:#f5f0ea;--muted:#c0bbd0;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--white);font-family:'Noto Serif TC',serif;min-height:100vh;overflow-x:hidden;}
+#starCanvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;}
+.nebula{position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse 55% 45% at 15% 60%,rgba(124,58,237,.18) 0%,transparent 65%),radial-gradient(ellipse 45% 55% at 85% 30%,rgba(45,212,191,.07) 0%,transparent 55%),radial-gradient(ellipse 70% 40% at 50% 90%,rgba(42,15,107,.35) 0%,transparent 60%);}
+.page{position:relative;z-index:1;max-width:1020px;margin:0 auto;padding:48px 20px 80px;display:flex;flex-direction:column;align-items:center;gap:30px;}
+/* HEADER */
+.header{text-align:center;animation:riseIn 1.2s cubic-bezier(.22,1,.36,1) both;}
+@keyframes riseIn{from{opacity:0;transform:translateY(-24px);}to{opacity:1;transform:translateY(0);}}
+.header-glyph{font-size:1.4rem;letter-spacing:.6em;color:var(--gold);text-shadow:0 0 18px var(--gold-glow);margin-bottom:10px;display:block;}
+.header h1{font-family:'Cinzel Decorative',serif;font-size:clamp(2.2rem,5.5vw,3.8rem);color:var(--gold-light);letter-spacing:.12em;text-shadow:0 0 30px rgba(240,201,106,.5),0 0 80px rgba(201,149,42,.2);line-height:1.1;}
+.header-sub{margin-top:8px;font-size:.8rem;color:var(--gold-dim);letter-spacing:.35em;font-weight:300;}
+.header-tagline{margin-top:6px;font-size:.95rem;color:var(--muted);letter-spacing:.2em;font-weight:300;}
+.ornament{display:flex;align-items:center;gap:14px;margin:12px 0 0;color:var(--gold-dim);font-size:.8rem;letter-spacing:.2em;}
+.ornament::before,.ornament::after{content:'';flex:1;height:1px;background:linear-gradient(to right,transparent,var(--gold-dim),transparent);}
+/* SETUP */
+.setup-panel{width:100%;max-width:760px;background:rgba(17,6,48,.6);border:1px solid rgba(201,149,42,.2);border-radius:20px;padding:30px 28px;backdrop-filter:blur(12px);display:flex;flex-direction:column;gap:24px;animation:riseIn 1s ease .3s both;}
+.section-label{display:block;text-align:center;font-size:.72rem;color:var(--gold);letter-spacing:.4em;margin-bottom:12px;font-weight:400;}
+/* QUESTION */
+.question-wrap{position:relative;}
+.question-wrap::before,.question-wrap::after{content:'🐾';position:absolute;top:50%;transform:translateY(-50%);font-size:.9rem;opacity:.28;pointer-events:none;}
+.question-wrap::before{left:14px;}.question-wrap::after{right:14px;}
+.question-input{width:100%;padding:14px 44px;background:rgba(10,4,30,.7);border:1px solid rgba(201,149,42,.25);border-radius:10px;color:var(--white);font-family:'Noto Serif TC',serif;font-size:.9rem;letter-spacing:.08em;text-align:center;resize:none;transition:border-color .3s,box-shadow .3s;outline:none;line-height:1.65;}
+.question-input::placeholder{color:rgba(122,109,128,.5);letter-spacing:.1em;}
+.question-input:focus{border-color:rgba(201,149,42,.55);box-shadow:0 0 20px rgba(201,149,42,.1);}
+/* CATEGORY TABS */
+.category-tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
+.cat-tab{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 14px;background:rgba(10,4,30,.6);border:1px solid rgba(201,149,42,.18);border-radius:10px;cursor:pointer;transition:all .25s ease;min-width:88px;}
+.cat-tab:hover{border-color:rgba(201,149,42,.4);background:rgba(42,15,107,.3);transform:translateY(-2px);}
+.cat-tab.active{border-color:var(--gold);background:rgba(42,15,107,.55);box-shadow:0 0 16px rgba(201,149,42,.18);}
+.cat-icon{font-size:1.2rem;line-height:1;}.cat-name{font-size:.72rem;color:var(--gold-light);letter-spacing:.08em;font-weight:600;white-space:nowrap;}
+/* SPREAD GRID */
+.spread-grid{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;min-height:80px;}
+.spread-card{display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 14px;background:rgba(10,4,30,.6);border:1px solid rgba(201,149,42,.18);border-radius:10px;cursor:pointer;transition:all .25s ease;min-width:120px;max-width:160px;text-align:center;animation:popIn .3s cubic-bezier(.34,1.56,.64,1) both;animation-delay:var(--si);}
+@keyframes popIn{from{opacity:0;transform:scale(.85);}to{opacity:1;transform:scale(1);}}
+.spread-card:hover{border-color:rgba(201,149,42,.4);background:rgba(42,15,107,.3);transform:translateY(-2px);}
+.spread-card.active{border-color:var(--gold);background:rgba(42,15,107,.55);box-shadow:0 0 16px rgba(201,149,42,.2);}
+.sc-name{font-size:.8rem;color:var(--gold-light);letter-spacing:.06em;font-weight:600;}
+.sc-count{font-size:.62rem;color:var(--gold-dim);letter-spacing:.1em;}
+.sc-desc{font-size:.62rem;color:var(--muted);line-height:1.4;margin-top:2px;}
+/* CHOICE OPTIONS */
+.choice-options-section{display:flex;flex-direction:column;gap:10px;padding:16px;background:rgba(10,4,30,.5);border:1px solid rgba(201,149,42,.15);border-radius:12px;}
+.co-row{display:flex;align-items:center;gap:10px;}
+.co-label{font-size:.72rem;color:var(--gold);letter-spacing:.1em;min-width:42px;flex-shrink:0;}
+.co-input{flex:1;padding:10px 14px;background:rgba(17,6,48,.7);border:1px solid rgba(201,149,42,.22);border-radius:8px;color:var(--white);font-family:'Noto Serif TC',serif;font-size:.85rem;outline:none;transition:border-color .3s;}
+.co-input::placeholder{color:rgba(122,109,128,.45);}
+.co-input:focus{border-color:rgba(201,149,42,.5);}
+.co-btns{display:flex;gap:8px;justify-content:center;}
+.co-add-btn,.co-rm-btn{padding:7px 18px;font-family:'Noto Serif TC',serif;font-size:.75rem;letter-spacing:.15em;cursor:pointer;border-radius:6px;transition:all .25s ease;}
+.co-add-btn{background:transparent;border:1px solid rgba(201,149,42,.35);color:var(--gold-light);}
+.co-add-btn:hover{background:rgba(201,149,42,.1);border-color:var(--gold);}
+.co-rm-btn{background:transparent;border:1px solid rgba(232,121,160,.3);color:var(--rose);}
+.co-rm-btn:hover{background:rgba(232,121,160,.1);}
+.co-rm-btn:disabled{opacity:.3;cursor:default;}
+.co-add-btn:disabled{opacity:.3;cursor:default;}
+/* BEGIN BTN */
+.begin-btn{align-self:center;padding:14px 52px;background:linear-gradient(135deg,rgba(42,15,107,.85),rgba(17,6,48,.95));border:1px solid var(--gold);color:var(--gold-light);font-family:'Noto Serif TC',serif;font-size:.92rem;letter-spacing:.3em;cursor:pointer;border-radius:6px;position:relative;overflow:hidden;transition:all .3s ease;}
+.begin-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(201,149,42,.12),rgba(124,58,237,.2));opacity:0;transition:opacity .3s;}
+.begin-btn:hover::before{opacity:1;}
+.begin-btn:hover{box-shadow:0 0 24px var(--gold-glow),0 0 50px rgba(124,58,237,.2);transform:translateY(-2px);}
+/* READING AREA */
+.reading-area{width:100%;display:flex;flex-direction:column;align-items:center;gap:26px;}
+.reading-area.hidden{display:none;}
+.reading-header{text-align:center;display:flex;flex-direction:column;gap:8px;align-items:center;}
+.reading-spread-name{font-size:.75rem;color:var(--gold);letter-spacing:.4em;}
+.reading-question{font-size:.9rem;color:var(--gold-light);font-style:italic;letter-spacing:.08em;padding:10px 22px;background:rgba(42,15,107,.25);border:1px solid rgba(201,149,42,.15);border-radius:8px;line-height:1.65;max-width:560px;}
+.instruction{font-size:.78rem;color:var(--muted);letter-spacing:.2em;text-align:center;animation:breathe 3s ease-in-out infinite;}
+@keyframes breathe{0%,100%{opacity:.5;}50%{opacity:1;}}
+.section-divider{width:100%;max-width:500px;display:flex;align-items:center;gap:16px;color:var(--gold-dim);font-size:.75rem;letter-spacing:.2em;}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:1px;background:linear-gradient(to right,transparent,var(--gold-dim),transparent);}
+/* SPREAD */
+.spread{display:flex;justify-content:center;align-items:flex-end;gap:clamp(10px,2.2vw,20px);width:100%;padding:10px 0 16px;flex-wrap:wrap;}
+/* SLOT */
+.slot{display:flex;flex-direction:column;align-items:center;gap:10px;opacity:0;animation:dealIn .7s cubic-bezier(.34,1.56,.64,1) forwards;animation-delay:var(--d);}
+@keyframes dealIn{from{opacity:0;transform:translateY(-55px) scale(.85) rotate(var(--tilt));}to{opacity:1;transform:translateY(0) scale(1) rotate(0deg);}}
+.pos-badge{display:flex;flex-direction:column;align-items:center;gap:3px;}
+.pos-num{width:22px;height:22px;border:1px solid var(--gold-dim);border-radius:50%;display:grid;place-items:center;font-size:.65rem;color:var(--gold);}
+.pos-name{font-size:.7rem;color:var(--gold-dim);letter-spacing:.1em;text-align:center;max-width:100px;}
+.pos-opt{font-size:.62rem;color:var(--muted);text-align:center;max-width:100px;line-height:1.3;margin-top:1px;}
+/* CARD */
+.card-wrap{width:var(--card-w,140px);aspect-ratio:2/3.6;perspective:1000px;cursor:pointer;transition:transform .3s ease;}
+.card-wrap:hover{transform:translateY(-6px);}
+.card-wrap:hover .card-inner:not(.flipped) .card-back-face{box-shadow:0 0 0 1px rgba(201,149,42,.5),0 0 30px rgba(124,58,237,.4),0 0 60px rgba(201,149,42,.15),0 20px 40px rgba(0,0,0,.7);}
+.card-inner{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .85s cubic-bezier(.4,0,.2,1);}
+.card-inner.flipped{transform:rotateY(180deg);}
+.card-face{position:absolute;inset:0;border-radius:12px;backface-visibility:hidden;overflow:hidden;}
+.card-back-face{background:linear-gradient(155deg,#1b0c42 0%,#0b0620 50%,#180a3a 100%);border:1px solid rgba(201,149,42,.28);box-shadow:0 0 0 1px rgba(201,149,42,.08),inset 0 0 40px rgba(124,58,237,.25),0 12px 30px rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;}
+.back-inner{width:88%;height:92%;border:1px solid rgba(201,149,42,.18);border-radius:8px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.back-inner::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle,rgba(201,149,42,.12) 1.5px,transparent 1.5px);background-size:18px 18px;}
+.back-paw-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:12px;opacity:.25;font-size:clamp(9px,1.8vw,14px);text-align:center;line-height:1.6;}
+.back-sigil{position:absolute;font-size:2.8rem;opacity:.08;filter:blur(2px);}
+.back-corner{position:absolute;color:rgba(201,149,42,.4);font-size:.55rem;font-family:'IM Fell English SC',serif;}
+.back-corner.tl{top:6px;left:8px;}.back-corner.br{bottom:6px;right:8px;}
+.card-front-face{transform:rotateY(180deg);background:linear-gradient(160deg,#130830 0%,#0a0418 55%,#130828 100%);border:1px solid rgba(201,149,42,.4);box-shadow:0 0 0 1px rgba(201,149,42,.12),inset 0 0 50px rgba(124,58,237,.15),0 15px 45px rgba(0,0,0,.75);display:flex;align-items:stretch;}
+.card-inner.flipped .card-front-face{animation:frontGlow 3.5s ease-in-out .9s infinite;}
+@keyframes frontGlow{0%,100%{box-shadow:0 0 0 1px rgba(201,149,42,.12),inset 0 0 50px rgba(124,58,237,.15),0 15px 45px rgba(0,0,0,.75);}50%{box-shadow:0 0 0 1px rgba(201,149,42,.35),inset 0 0 60px rgba(124,58,237,.25),0 0 40px rgba(201,149,42,.2),0 20px 50px rgba(0,0,0,.65);}}
+.front-frame{flex:1;margin:8px;border:1px solid rgba(201,149,42,.2);border-radius:7px;display:flex;flex-direction:column;align-items:center;padding:7px 5px;gap:5px;position:relative;}
+.front-frame::before{content:'✦';position:absolute;top:5px;left:6px;color:rgba(201,149,42,.35);font-size:7px;}
+.front-frame::after{content:'✦';position:absolute;bottom:5px;right:6px;color:rgba(201,149,42,.35);font-size:7px;}
+.card-num{font-family:'IM Fell English SC',serif;font-size:.55rem;color:var(--gold-dim);letter-spacing:.1em;}
+.card-art-box{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;}
+.card-emoji-main{font-size:clamp(2rem,5vw,3.2rem);line-height:1;filter:drop-shadow(0 0 8px rgba(201,149,42,.4));}
+.card-emoji-sub{font-size:clamp(.9rem,2vw,1.2rem);line-height:1;opacity:.75;}
+.card-inner.flipped .card-emoji-main{animation:floatEmoji 4s ease-in-out 1s infinite;}
+@keyframes floatEmoji{0%,100%{transform:translateY(0);}50%{transform:translateY(-3px);}}
+.reversed .card-art-box{transform:rotate(180deg);}
+.card-divider-line{width:55%;height:1px;flex-shrink:0;background:linear-gradient(to right,transparent,var(--gold-dim),transparent);}
+.card-name-text{font-size:clamp(.52rem,1.1vw,.68rem);font-weight:700;color:var(--gold-light);text-align:center;letter-spacing:.04em;line-height:1.35;}
+.reversed-badge{font-size:.45rem;color:var(--rose);letter-spacing:.15em;opacity:0;}
+.reversed-badge.visible{opacity:1;}
+.card-meaning-text{font-size:clamp(.42rem,.9vw,.56rem);color:var(--muted);text-align:center;line-height:1.5;padding:0 3px;}
+/* READING PANEL */
+.reading-panel{width:100%;max-width:860px;background:rgba(17,6,48,.6);border:1px solid rgba(201,149,42,.18);border-radius:16px;padding:22px 26px;backdrop-filter:blur(12px);}
+.reading-title{text-align:center;font-size:.72rem;color:var(--gold);letter-spacing:.4em;margin-bottom:16px;font-weight:400;}
+.reading-empty{text-align:center;color:var(--muted);font-size:.82rem;letter-spacing:.12em;padding:10px 0;opacity:.7;}
+.reading-list{display:flex;flex-direction:column;gap:10px;}
+.reading-item{display:grid;grid-template-columns:82px 1fr;gap:12px;align-items:start;background:rgba(124,58,237,.08);border:1px solid rgba(201,149,42,.1);border-radius:10px;padding:10px 14px;animation:fadeSlide .4s ease both;animation-delay:var(--rd);}
+@keyframes fadeSlide{from{opacity:0;transform:translateX(-10px);}to{opacity:1;transform:translateX(0);}}
+.ri-pos{display:flex;flex-direction:column;gap:3px;}
+.ri-pos-name{font-size:.65rem;color:var(--gold);letter-spacing:.2em;}
+.ri-card-name{font-size:.75rem;color:var(--gold-light);font-weight:600;}
+.ri-badge{font-size:.55rem;color:var(--rose);letter-spacing:.1em;}
+.ri-meaning{font-size:.78rem;color:var(--muted);line-height:1.7;padding-top:1px;}
+/* YES/NO */
+.yesno-result{display:flex;flex-direction:column;align-items:center;gap:14px;padding:10px 0;}
+.yesno-answer{font-family:'Cinzel Decorative',serif;font-size:3rem;letter-spacing:.15em;text-shadow:0 0 30px currentColor;}
+.yesno-answer.yes{color:var(--green);}.yesno-answer.no{color:var(--rose);}
+.yesno-card-name{font-size:.85rem;color:var(--gold-light);letter-spacing:.12em;}
+.yesno-meaning{font-size:.82rem;color:var(--muted);line-height:1.7;text-align:center;max-width:500px;}
+/* CHOICE RESULT */
+.choice-result{display:flex;flex-direction:column;gap:12px;}
+.choice-item{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start;background:rgba(124,58,237,.08);border:1px solid rgba(201,149,42,.1);border-radius:10px;padding:12px 16px;animation:fadeSlide .4s ease both;animation-delay:var(--rd);}
+.choice-item.winner{border-color:var(--gold);background:rgba(42,15,107,.3);box-shadow:0 0 16px rgba(201,149,42,.15);}
+.ci-left{display:flex;flex-direction:column;gap:4px;}
+.ci-opt{font-size:.65rem;color:var(--gold);letter-spacing:.2em;}
+.ci-card{font-size:.8rem;color:var(--gold-light);font-weight:600;}
+.ci-meaning{font-size:.75rem;color:var(--muted);line-height:1.6;margin-top:3px;}
+.ci-right{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:70px;}
+.ci-pct{font-family:'Cinzel Decorative',serif;font-size:1.3rem;font-weight:700;}
+.ci-pct.high{color:var(--green);}.ci-pct.mid{color:var(--gold-light);}.ci-pct.low{color:var(--rose);}
+.ci-bar-wrap{width:60px;height:6px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden;}
+.ci-bar{height:100%;border-radius:3px;transition:width .8s ease;}
+.ci-bar.high{background:var(--green);}.ci-bar.mid{background:var(--gold-light);}.ci-bar.low{background:var(--rose);}
+.ci-crown{font-size:.8rem;text-align:center;}
+.choice-recommend{margin-top:6px;padding:14px 18px;background:rgba(42,15,107,.4);border:1px solid rgba(201,149,42,.3);border-radius:10px;text-align:center;}
+.cr-label{font-size:.68rem;color:var(--gold-dim);letter-spacing:.3em;margin-bottom:6px;}
+.cr-winner{font-size:1rem;color:var(--gold-light);font-weight:700;letter-spacing:.08em;}
+/* CTA */
+.cta-row{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;align-items:center;}
+.ghost-btn{padding:12px 26px;background:transparent;border:1px solid rgba(201,149,42,.3);color:var(--muted);font-family:'Noto Serif TC',serif;font-size:.82rem;letter-spacing:.22em;cursor:pointer;border-radius:4px;transition:all .3s ease;}
+.ghost-btn:hover{border-color:var(--gold);color:var(--gold-light);background:rgba(42,15,107,.3);transform:translateY(-2px);}
+.reshuffle-btn{padding:13px 36px;background:transparent;border:1px solid var(--gold);color:var(--gold-light);font-family:'Noto Serif TC',serif;font-size:.88rem;letter-spacing:.28em;cursor:pointer;border-radius:4px;position:relative;overflow:hidden;transition:all .3s ease;}
+.reshuffle-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(201,149,42,.1),rgba(124,58,237,.18));opacity:0;transition:opacity .3s;}
+.reshuffle-btn:hover::before{opacity:1;}
+.reshuffle-btn:hover{box-shadow:0 0 20px var(--gold-glow),0 0 40px rgba(124,58,237,.2);transform:translateY(-2px);}
+.footer-note{font-size:.62rem;color:rgba(122,109,128,.4);letter-spacing:.18em;text-align:center;}
+.hidden{display:none !important;}
+@keyframes shuffleOut{0%{opacity:1;transform:scale(1) rotate(0);}40%{opacity:.5;transform:scale(.8) rotate(8deg) translateY(-20px);}100%{opacity:0;transform:scale(.6) rotate(-5deg) translateY(40px);}}
+.slot.shuffle-out{animation:shuffleOut .45s ease both !important;}
+@media(max-width:640px){.spread{gap:8px;}.reading-item{grid-template-columns:1fr;}.cat-tab{min-width:72px;padding:9px 10px;}.setup-panel{padding:22px 16px;}}
+/* SHUFFLE OVERLAY */
+.shuffle-overlay{width:100%;min-height:230px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;padding:20px 0;}
+.sov-pile{position:relative;width:130px;height:170px;}
+.sov-card{position:absolute;width:72px;height:116px;left:50%;top:50%;margin-left:-36px;margin-top:-58px;background:linear-gradient(155deg,#1b0c42 0%,#0b0620 50%,#180a3a 100%);border:1px solid rgba(201,149,42,.45);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;color:rgba(201,149,42,.2);box-shadow:inset 0 0 20px rgba(124,58,237,.2);}
+.sov-card::after{content:'🐾';opacity:.18;}
+.sov-card:nth-child(1){animation:sovA 1.55s cubic-bezier(.25,.46,.45,.94) both;}
+.sov-card:nth-child(2){animation:sovB 1.55s cubic-bezier(.25,.46,.45,.94) .04s both;}
+.sov-card:nth-child(3){animation:sovC 1.55s cubic-bezier(.25,.46,.45,.94) .08s both;}
+.sov-card:nth-child(4){animation:sovD 1.55s cubic-bezier(.25,.46,.45,.94) .12s both;}
+.sov-card:nth-child(5){animation:sovE 1.55s cubic-bezier(.25,.46,.45,.94) .16s both;}
+.sov-card:nth-child(6){animation:sovF 1.55s cubic-bezier(.25,.46,.45,.94) .20s both;}
+@keyframes sovA{0%{transform:translate(0,0) rotate(0) scale(1);opacity:.6;}35%{transform:translate(-95px,-52px) rotate(-44deg) scale(1.1);opacity:1;filter:drop-shadow(0 0 8px rgba(201,149,42,.6));}75%{transform:translate(-22px,18px) rotate(-16deg) scale(1.03);}100%{transform:translate(0,0) rotate(-4deg) scale(1);opacity:.85;}}
+@keyframes sovB{0%{transform:translate(0,0) rotate(0) scale(1);opacity:.6;}35%{transform:translate(90px,-48px) rotate(40deg) scale(1.1);opacity:1;filter:drop-shadow(0 0 8px rgba(201,149,42,.6));}75%{transform:translate(18px,14px) rotate(14deg) scale(1.03);}100%{transform:translate(0,0) rotate(3deg) scale(1);opacity:.85;}}
+@keyframes sovC{0%{transform:translate(0,0) rotate(0) scale(1);opacity:.6;}35%{transform:translate(75px,58px) rotate(52deg) scale(1.1);opacity:1;filter:drop-shadow(0 0 8px rgba(201,149,42,.6));}75%{transform:translate(12px,-16px) rotate(20deg) scale(1.03);}100%{transform:translate(0,0) rotate(5deg) scale(1);opacity:.85;}}
+@keyframes sovD{0%{transform:translate(0,0) rotate(0) scale(1);opacity:.6;}35%{transform:translate(-80px,55px) rotate(-58deg) scale(1.1);opacity:1;filter:drop-shadow(0 0 8px rgba(201,149,42,.6));}75%{transform:translate(-15px,-12px) rotate(-24deg) scale(1.03);}100%{transform:translate(0,0) rotate(-6deg) scale(1);opacity:.85;}}
+@keyframes sovE{0%{transform:translate(0,0) rotate(0) scale(1);opacity:.6;}35%{transform:translate(-10px,-75px) rotate(30deg) scale(1.12);opacity:1;filter:drop-shadow(0 0 10px rgba(201,149,42,.7));}75%{transform:translate(5px,-8px) rotate(10deg) scale(1.04);}100%{transform:translate(0,0) rotate(2deg) scale(1);opacity:.85;}}
+@keyframes sovF{0%{transform:translate(0,0) rotate(0) scale(1);opacity:.6;}35%{transform:translate(8px,70px) rotate(-32deg) scale(1.12);opacity:1;filter:drop-shadow(0 0 10px rgba(201,149,42,.7));}75%{transform:translate(-5px,6px) rotate(-12deg) scale(1.04);}100%{transform:translate(0,0) rotate(-2deg) scale(1);opacity:.85;}}
+.sov-prompt{font-family:'Noto Serif TC',serif;font-size:1.05rem;color:var(--white);letter-spacing:.22em;text-align:center;animation:riseIn .6s ease both,breathe 2.5s ease-in-out .6s infinite;text-shadow:0 0 20px rgba(201,149,42,.4),0 0 50px rgba(124,58,237,.2);}
+.sov-label{font-size:.68rem;color:var(--gold-dim);letter-spacing:.42em;animation:breathe 1.2s ease-in-out infinite;text-align:center;}
+/* SCREENSHOT BUTTON */
+.shot-btn{align-self:center;margin-top:6px;padding:10px 28px;background:transparent;border:1px solid rgba(201,149,42,.4);color:var(--gold-light);font-family:'Noto Serif TC',serif;font-size:.8rem;letter-spacing:.25em;cursor:pointer;border-radius:6px;transition:all .3s ease;}
+.shot-btn:hover{background:rgba(201,149,42,.1);box-shadow:0 0 16px var(--gold-glow);transform:translateY(-2px);}
+/* SCREENSHOT MODAL */
+.shot-modal{position:fixed;inset:0;z-index:200;background:rgba(4,2,14,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(8px);animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+.shot-modal.hidden{display:none!important;}
+.shot-card{width:100%;max-width:500px;max-height:82vh;overflow-y:auto;background:linear-gradient(170deg,#120930 0%,#080318 60%,#120826 100%);border:1px solid rgba(201,149,42,.5);border-radius:16px;padding:24px 22px;display:flex;flex-direction:column;gap:14px;box-shadow:0 0 60px rgba(201,149,42,.18),0 0 120px rgba(124,58,237,.12);}
+.shot-card::-webkit-scrollbar{width:4px;}.shot-card::-webkit-scrollbar-thumb{background:rgba(201,149,42,.3);border-radius:2px;}
+.sh-header{text-align:center;border-bottom:1px solid rgba(201,149,42,.2);padding-bottom:12px;display:flex;flex-direction:column;gap:4px;}
+.sh-title{font-family:'Cinzel Decorative',serif;font-size:1.1rem;color:var(--gold-light);letter-spacing:.12em;text-shadow:0 0 20px rgba(240,201,106,.3);}
+.sh-meta{font-size:.65rem;color:var(--gold-dim);letter-spacing:.25em;}
+.sh-question{font-size:.82rem;color:var(--white);font-style:italic;background:rgba(42,15,107,.25);border-radius:8px;padding:8px 14px;line-height:1.7;letter-spacing:.06em;}
+.sh-question span{color:var(--gold);font-style:normal;font-size:.65rem;letter-spacing:.25em;display:block;margin-bottom:3px;}
+.sh-cards{display:flex;flex-direction:column;gap:7px;}
+.sh-card-row{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start;padding:8px 10px;background:rgba(17,6,48,.5);border-radius:7px;border-left:2px solid rgba(201,149,42,.22);}
+.shc-pos{font-size:.62rem;color:var(--gold);letter-spacing:.1em;white-space:nowrap;padding-top:2px;}
+.shc-detail{font-size:.75rem;color:var(--white);line-height:1.6;}
+.shc-opt{font-size:.72rem;color:var(--white);font-weight:600;letter-spacing:.06em;margin-bottom:2px;}
+.shc-name{color:var(--gold-light);font-weight:600;}
+.shc-meaning{color:var(--muted);font-size:.7rem;margin-top:2px;line-height:1.5;}
+.sh-energy{display:flex;align-items:center;justify-content:center;gap:12px;padding:10px 0;border-top:1px solid rgba(201,149,42,.15);border-bottom:1px solid rgba(201,149,42,.15);}
+.sh-vibe{padding:4px 14px;border-radius:14px;font-size:.72rem;letter-spacing:.08em;font-weight:600;}
+.sh-vibe.vibe-high{background:rgba(74,222,128,.12);border:1px solid rgba(74,222,128,.3);color:#4ade80;}
+.sh-vibe.vibe-good{background:rgba(201,149,42,.12);border:1px solid rgba(201,149,42,.3);color:var(--gold-light);}
+.sh-vibe.vibe-mid{background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.25);color:#5eead4;}
+.sh-vibe.vibe-low{background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.3);color:#c4b5fd;}
+.sh-energy-pct{font-size:.72rem;color:var(--muted);letter-spacing:.18em;}
+.sh-advice{font-size:.78rem;color:var(--white);line-height:1.75;letter-spacing:.06em;background:rgba(42,15,107,.2);border-radius:8px;padding:10px 14px;}
+.sh-advice-label{font-size:.62rem;color:var(--gold);letter-spacing:.3em;display:block;margin-bottom:6px;}
+.sh-footer{text-align:center;font-size:.6rem;color:var(--gold-dim);letter-spacing:.2em;opacity:.6;}
+.shot-actions{display:flex;gap:12px;margin-top:14px;flex-wrap:wrap;justify-content:center;}
+.sa-btn{padding:10px 24px;font-family:'Noto Serif TC',serif;font-size:.78rem;letter-spacing:.18em;cursor:pointer;border-radius:6px;transition:all .25s ease;}
+.sa-copy{background:transparent;border:1px solid rgba(201,149,42,.4);color:var(--gold-light);}
+.sa-copy:hover{background:rgba(201,149,42,.1);}
+.sa-share{background:linear-gradient(135deg,rgba(42,15,107,.6),rgba(17,6,48,.8));border:1px solid var(--gold);color:var(--gold-light);}
+.sa-share:hover{box-shadow:0 0 16px var(--gold-glow);transform:translateY(-2px);}
+.sa-share:disabled{opacity:.55;cursor:not-allowed;transform:none;}
+.sa-close{background:transparent;border:1px solid rgba(122,109,128,.3);color:var(--muted);}
+.sa-close:hover{border-color:var(--rose);color:var(--rose);}
+/* SOUL EXTRA (quote / book / movie) */
+.soul-extra{background:linear-gradient(135deg,rgba(124,58,237,.12),rgba(42,15,107,.2));border:1px solid rgba(124,58,237,.3);border-radius:10px;padding:14px 18px;display:flex;flex-direction:column;gap:6px;}
+.se-type{font-size:.62rem;color:#c4b5fd;letter-spacing:.3em;font-weight:600;}
+.se-text{font-size:.82rem;color:var(--white);line-height:1.75;letter-spacing:.06em;}
+.sh-extra{background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.25);border-radius:8px;padding:10px 14px;display:flex;flex-direction:column;gap:4px;}
+.sh-extra-type{font-size:.6rem;color:#c4b5fd;letter-spacing:.25em;}
+.sh-extra-text{font-size:.72rem;color:var(--white);line-height:1.65;letter-spacing:.05em;}
+/* HISTORY SECTION */
+.hist-area{width:100%;max-width:860px;display:flex;flex-direction:column;align-items:center;gap:12px;}
+.hist-toggle-btn{padding:9px 24px;background:transparent;border:1px solid rgba(201,149,42,.2);color:rgba(201,149,42,.6);font-family:'Noto Serif TC',serif;font-size:.72rem;letter-spacing:.25em;cursor:pointer;border-radius:6px;transition:all .25s ease;}
+.hist-toggle-btn:hover{border-color:rgba(201,149,42,.5);color:var(--gold-light);background:rgba(42,15,107,.2);}
+.hist-panel{width:100%;background:rgba(10,4,28,.65);border:1px solid rgba(201,149,42,.15);border-radius:14px;padding:18px 20px;backdrop-filter:blur(10px);display:flex;flex-direction:column;gap:10px;animation:riseIn .4s ease both;}
+.hist-empty{text-align:center;font-size:.78rem;color:rgba(192,187,208,.4);letter-spacing:.15em;padding:12px 0;}
+.hist-entry{background:rgba(17,6,48,.5);border:1px solid rgba(201,149,42,.1);border-radius:10px;overflow:hidden;transition:border-color .25s;}
+.hist-entry:hover{border-color:rgba(201,149,42,.3);}
+.he-summary{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;}
+.he-left{display:flex;flex-direction:column;gap:3px;}
+.he-date{font-size:.62rem;color:var(--gold-dim);letter-spacing:.15em;}
+.he-spread{font-size:.72rem;color:var(--gold-light);letter-spacing:.1em;font-weight:600;}
+.he-question{font-size:.75rem;color:var(--muted);letter-spacing:.06em;line-height:1.5;margin-top:2px;}
+.he-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;}
+.he-energy{font-size:.72rem;color:var(--gold);letter-spacing:.1em;font-weight:600;}
+.he-arrow{font-size:.65rem;color:var(--gold-dim);transition:transform .25s;}
+.he-detail{display:none;padding:0 14px 12px;border-top:1px solid rgba(201,149,42,.08);margin-top:-2px;}
+.he-detail.open{display:block;}
+.he-arrow.open{transform:rotate(180deg);}
+.he-cards-list{display:flex;flex-direction:column;gap:5px;margin-top:10px;}
+.hec-row{font-size:.72rem;color:var(--muted);line-height:1.5;}
+.hec-pos{color:var(--gold);font-weight:600;margin-right:4px;}
+.he-advice-text{font-size:.73rem;color:rgba(192,187,208,.75);line-height:1.65;margin-top:8px;padding-top:8px;border-top:1px solid rgba(201,149,42,.08);}
+/* CONCLUSION PANEL */
+.conclusion-panel{width:100%;max-width:760px;background:rgba(10,4,30,.75);border:1px solid rgba(201,149,42,.35);border-radius:18px;padding:30px 28px;backdrop-filter:blur(14px);display:flex;flex-direction:column;gap:18px;animation:conclusionReveal .9s cubic-bezier(.22,1,.36,1) both;box-shadow:0 0 40px rgba(201,149,42,.08),0 0 80px rgba(124,58,237,.08);}
+@keyframes conclusionReveal{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+.conclusion-header{text-align:center;}
+.ch-deco{font-size:.75rem;color:var(--gold);letter-spacing:.38em;display:block;margin-bottom:6px;}
+.ch-title{font-family:'Cinzel Decorative',serif;font-size:1.05rem;color:var(--gold-light);letter-spacing:.15em;text-shadow:0 0 20px rgba(240,201,106,.3);}
+.cn-question{text-align:center;font-size:.88rem;color:var(--muted);font-style:italic;letter-spacing:.08em;padding:8px 18px;background:rgba(42,15,107,.2);border-radius:8px;border:1px solid rgba(201,149,42,.1);line-height:1.65;}
+.cn-question span{color:var(--gold-light);}
+.cn-energy-row{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;}
+.cn-vibe{padding:5px 16px;border-radius:20px;font-size:.78rem;letter-spacing:.1em;font-weight:600;}
+.cn-vibe.vibe-high{background:rgba(74,222,128,.12);border:1px solid rgba(74,222,128,.3);color:#4ade80;}
+.cn-vibe.vibe-good{background:rgba(201,149,42,.12);border:1px solid rgba(201,149,42,.3);color:var(--gold-light);}
+.cn-vibe.vibe-mid{background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.25);color:#5eead4;}
+.cn-vibe.vibe-low{background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.3);color:#c4b5fd;}
+.cn-score{font-size:.75rem;color:var(--muted);letter-spacing:.15em;}
+.cn-divider{height:1px;background:linear-gradient(to right,transparent,rgba(201,149,42,.2),transparent);}
+.cn-narrative{display:flex;flex-direction:column;gap:10px;}
+.cn-part{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start;padding:10px 14px;background:rgba(17,6,48,.5);border-radius:8px;border-left:2px solid rgba(201,149,42,.25);animation:cnPartIn .5s ease both;animation-delay:var(--np);}
+@keyframes cnPartIn{from{opacity:0;transform:translateX(-8px);}to{opacity:1;transform:translateX(0);}}
+.cn-pos-tag{font-size:.68rem;color:var(--gold);letter-spacing:.08em;white-space:nowrap;padding-top:2px;font-weight:600;}
+.cn-card-snippet{font-size:.8rem;color:var(--white);line-height:1.65;letter-spacing:.05em;}
+.cn-card-name{color:var(--gold-light);font-weight:600;}
+.cn-reversed-note{font-size:.78rem;color:#c4b5fd;background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.2);border-radius:8px;padding:10px 14px;letter-spacing:.06em;line-height:1.65;}
+.cn-advice{background:linear-gradient(135deg,rgba(42,15,107,.4),rgba(17,6,48,.5));border:1px solid rgba(201,149,42,.25);border-radius:12px;padding:18px 20px;display:flex;flex-direction:column;gap:8px;}
+.cna-label{font-size:.7rem;color:var(--gold);letter-spacing:.35em;}
+.cna-text{font-size:.88rem;color:var(--white);line-height:1.8;letter-spacing:.07em;}
+.cna-action{font-size:.78rem;color:var(--gold-light);letter-spacing:.1em;margin-top:4px;font-style:italic;}
+</style>
+</head>
+<body>
+<canvas id="starCanvas"></canvas>
+<div class="nebula"></div>
+<div class="page">
+  <header class="header">
+    <span class="header-glyph">🐾 ✦ 🐾</span>
+    <h1>貓咪塔羅</h1>
+    <p class="header-sub">Cat Tarot · 貓靈神諭</p>
+    <div class="ornament">✦ ✦ ✦</div>
+    <p class="header-tagline">讓貓靈指引你的命運</p>
+  </header>
+
+  <div class="setup-panel" id="setupPanel">
+    <div>
+      <span class="section-label">✦ &nbsp; 心中默想你的問題 &nbsp; ✦</span>
+      <div class="question-wrap">
+        <textarea class="question-input" id="questionInput" rows="2"
+          placeholder="寫下你想詢問的問題（可留空）&#10;例：我的感情走向如何？/ 這個決定正確嗎？"></textarea>
+      </div>
+    </div>
+    <div>
+      <span class="section-label">✦ &nbsp; 選擇牌陣類別 &nbsp; ✦</span>
+      <div class="category-tabs" id="categoryTabs"></div>
+    </div>
+    <div>
+      <span class="section-label">✦ &nbsp; 選擇牌陣 &nbsp; ✦</span>
+      <div class="spread-grid" id="spreadGrid"></div>
+    </div>
+    <!-- 選擇分析專用：輸入選項 -->
+    <div id="choiceSection" class="hidden">
+      <span class="section-label">✦ &nbsp; 輸入你的選項 &nbsp; ✦</span>
+      <div class="choice-options-section">
+        <div id="coList"></div>
+        <div class="co-btns">
+          <button class="co-add-btn" id="coAddBtn" onclick="addOption()">＋ 新增選項</button>
+          <button class="co-rm-btn" id="coRmBtn" onclick="removeOption()">－ 移除選項</button>
+        </div>
+      </div>
+    </div>
+    <button class="begin-btn" onclick="beginReading()">✦ &nbsp; 開始占卜 &nbsp; ✦</button>
+  </div>
+
+  <div class="reading-area hidden" id="readingArea">
+    <div class="section-divider">✦</div>
+    <div class="reading-header">
+      <p class="reading-spread-name" id="readingSpreadName"></p>
+      <p class="reading-question hidden" id="readingQuestion"></p>
+    </div>
+    <p class="instruction" id="instructionText">點擊牌面，揭示天機</p>
+    <div id="shuffleOverlay" class="shuffle-overlay hidden">
+      <div class="sov-pile">
+        <div class="sov-card"></div>
+        <div class="sov-card"></div>
+        <div class="sov-card"></div>
+        <div class="sov-card"></div>
+        <div class="sov-card"></div>
+        <div class="sov-card"></div>
+      </div>
+      <p class="sov-prompt">請誠心向塔羅問出你的問題</p>
+      <p class="sov-label">✦ &nbsp; 洗牌中 · 貓靈正在選牌 &nbsp; ✦</p>
+    </div>
+    <div class="spread" id="spread"></div>
+    <div class="reading-panel">
+      <p class="reading-title">✦ &nbsp; 牌義解讀 &nbsp; ✦</p>
+      <div id="readingContent"><p class="reading-empty">翻開任意牌面以查閱貓靈的訊息</p></div>
+    </div>
+    <div id="conclusionPanel" class="hidden"></div>
+    <div class="cta-row">
+      <button class="ghost-btn" onclick="backToSetup()">← 重新選牌陣</button>
+      <button class="reshuffle-btn" onclick="reshuffleCards()">🔮 &nbsp; 重新洗牌</button>
+    </div>
+  </div>
+  <p class="footer-note">🐾 &nbsp; 貓靈已閱讀你的命運 · 請以好奇之心接受一切 &nbsp; 🐾</p>
+  <div class="hist-area">
+    <button class="hist-toggle-btn" onclick="toggleHistory()">📜 &nbsp; 最近占卜紀錄</button>
+    <div id="histPanel" class="hist-panel hidden"></div>
+  </div>
+</div>
+
+<!-- SCREENSHOT MODAL -->
+<div id="shotModal" class="shot-modal hidden" onclick="handleShotModalClick(event)">
+  <div class="shot-card" id="shotCard"></div>
+  <div class="shot-actions">
+    <button class="sa-btn sa-share" id="saShareBtn" onclick="saveOrShareImage()">📤 &nbsp; 儲存 / 分享圖片</button>
+    <button class="sa-btn sa-copy" onclick="copyShotText()">📋 &nbsp; 複製文字版</button>
+    <button class="sa-btn sa-close" onclick="closeShotModal()">✕ &nbsp; 關閉</button>
+  </div>
+</div>
+
+<script>
+// ─── CARD DATA ────────────────────────────────────────────────────
+const CARDS = [
+  {num:'O',   name:'愚者貓',     main:'🐱',sub:'🎒'},
+  {num:'I',   name:'魔法師貓',   main:'🐈‍⬛',sub:'✨'},
+  {num:'II',  name:'女祭司貓',   main:'😼',sub:'🌙'},
+  {num:'III', name:'女皇貓',     main:'🐈',sub:'🌸'},
+  {num:'IV',  name:'皇帝貓',     main:'🦁',sub:'⚔️'},
+  {num:'V',   name:'教皇貓',     main:'🐈',sub:'📿'},
+  {num:'VI',  name:'戀人貓',     main:'😻',sub:'💕'},
+  {num:'VII', name:'戰車貓',     main:'🐅',sub:'🏆'},
+  {num:'VIII',name:'力量貓',     main:'🦁',sub:'🌺'},
+  {num:'IX',  name:'隱者貓',     main:'🐱',sub:'🕯️'},
+  {num:'X',   name:'命運之輪貓', main:'☸️',sub:'🐾'},
+  {num:'XI',  name:'正義貓',     main:'⚖️',sub:'😾'},
+  {num:'XII', name:'吊貓人',     main:'🙃',sub:'🐾'},
+  {num:'XIII',name:'死神貓',     main:'🌑',sub:'🌹'},
+  {num:'XIV', name:'節制貓',     main:'🌊',sub:'🦋'},
+  {num:'XV',  name:'惡魔貓',     main:'😈',sub:'⛓️'},
+  {num:'XVI', name:'塔貓',       main:'⚡',sub:'🏰'},
+  {num:'XVII',name:'星星貓',     main:'⭐',sub:'💫'},
+  {num:'XVIII',name:'月亮貓',    main:'🌙',sub:'🐈'},
+  {num:'XIX', name:'太陽貓',     main:'☀️',sub:'🐱'},
+  {num:'XX',  name:'審判貓',     main:'📯',sub:'🐾'},
+  {num:'XXI', name:'世界貓',     main:'🌍',sub:'🎊'}
+];
+
+// ─── CONTEXT MEANINGS ─────────────────────────────────────────────
+// 6 contexts: study / love / work / fortune / soul / choice
+const CTX = {
+  'O':{
+    study:{up:'以好奇心和熱情探索知識，不怕犯錯，這份初學者的純真勇氣正是突破的關鍵。',dn:'考前準備不足，臨時抱佛腳難以奏效，需更踏實地打好每個知識基礎。'},
+    love:{up:'愛情新旅程即將開始，以純真開放的心迎接緣分，每段關係都是全新的冒險。',dn:'感情中過於衝動魯莽，未深思就行動，容易在衝動後留下遺憾。'},
+    work:{up:'嘗試全新的工作領域或職位，初學者的熱情與靈活是你此時最大的職場優勢。',dn:'在職場上準備不足就貿然行動，容易因疏忽細節而造成難以收拾的失誤。'},
+    fortune:{up:'意外之喜即將從意想不到的方向降臨，保持輕鬆開放，好運不請自來。',dn:'因粗心大意而頻頻錯失機會，需更謹慎地規劃才能真正把握住運勢。'},
+    soul:{up:'清空舊有的心理框架，以孩子般的純真眼光重新感受生命，一切都是可能的。',dn:'用衝動和逃避掩蓋內心深處的不安，需鼓起勇氣直視和接受真實的自己。'},
+    choice:{up:'這個選擇充滿冒險與無限可能，適合勇敢的你大膽嘗試，貓靈感受到強烈的前進能量。',dn:'這個選項的準備尚不充足，風險偏高，需三思確認自己已有足夠的心理和實際準備。'}
+  },
+  'I':{
+    study:{up:'你已具備學習所需的全部工具和能力，現在需要的只是專注整合，全力以赴必能成功。',dn:'才能尚未充分發揮，缺乏有效的學習計畫，需更系統地組織知識才能突破瓶頸。'},
+    love:{up:'掌握感情的主動權，以真誠的行動和心意表達愛，你有能力創造美好的感情關係。',dn:'在感情中耍弄心機或過度操控，這反而會推開對方，真心坦誠才是正確的方式。'},
+    work:{up:'充分運用你所有的技能與資源，這是展現才華、爭取重大突破的最佳黃金時機。',dn:'資源和能力尚未有效整合，需要更專注的規劃和練習，才能真正發揮出應有水準。'},
+    fortune:{up:'運勢強勁，你有足夠的能力掌握時機，主動出擊將帶來豐碩而令人滿意的收穫。',dn:'潛能受到某些阻礙，遭遇技術性或執行上的困難，需重新整理思路再度出發。'},
+    soul:{up:'你擁有改變現狀的意志和工具，相信自己的能力，你可以創造你真正渴望的生命。',dn:'內在力量被壓抑或用錯了方向，需靜下心來找回最初的意志力和生命目標。'},
+    choice:{up:'這個選擇能讓你完全發揮才能，你將掌握絕對的主導權，能量和機緣都配合得恰到好處。',dn:'你的準備和能力目前尚未到位，選這個可能難以發揮應有水準，時機需再等等。'}
+  },
+  'II':{
+    study:{up:'直覺和深度思考是你最大的學習優勢，安靜沉澱，知識將慢慢轉化為真正的智慧。',dn:'過度依賴死記硬背，忽略了對知識的深層理解與洞察，需要從根本改變學習方式。'},
+    love:{up:'靜待緣分自然流動，以敏銳的直覺感知對方的真心，沉默中孕育最深刻的情感連結。',dn:'對感情過度分析和猜疑，阻礙了感情的自然流動，試著放下防衛讓心真正開放。'},
+    work:{up:'以洞察力看穿職場動態和人際結構，暫時靜觀其變不急於表態，是目前最聰明的策略。',dn:'過度沉默或遲遲猶豫不決，好機會在你的等待中白白流走，需適時採取行動。'},
+    fortune:{up:'運勢在暗處醞釀積累，保持直覺的敏銳，機會和答案將在最合適的時機自然顯現。',dn:'忽略了內心的警訊和直覺，錯過了隱藏其中的機會，需更認真聆聽自己內心的聲音。'},
+    soul:{up:'所有的答案一直都藏在你的心裡，靜心向內探索，靈魂的低語將給你最需要的指引。',dn:'與內在直覺的連結被切斷，被外界喧囂的聲音淹沒，需刻意練習重新向內凝視。'},
+    choice:{up:'跟隨你最深層的直覺，靜下心來你就知道這個選擇對你而言是正確且自然的方向。',dn:'對這個選擇隱隱存有疑惑，你的直覺在提醒你需要更多訊息，再等等再做決定。'}
+  },
+  'III':{
+    study:{up:'學習狀態豐盛充實，努力耕耘將帶來豐碩的成果，才能和知識正在全面開花結果。',dn:'創造力和學習動力受到阻礙，過度保護或依賴讓你難以獨立突破當前的學習瓶頸。'},
+    love:{up:'感情豐盛而滋養彼此，給予充分的愛與關懷，這段關係將在溫柔中持續茁壯成長。',dn:'對感情過度依賴或試圖控制，愛的方式讓對方感到窒息，需給彼此更多呼吸的空間。'},
+    work:{up:'工作成果豐碩，創造力旺盛，這是收穫、繁榮和展現實力的絕佳好時期，好好把握。',dn:'過度保護自己的領地或控制工作流程，阻礙了有效的團隊合作與整體工作效率。'},
+    fortune:{up:'財運和整體運勢都處於豐盛期，付出的努力將帶來加倍的豐厚回報，大膽收穫。',dn:'財富或機會的流動受到阻礙，需要放開過度的掌控，才能讓好運和財富自然地流入。'},
+    soul:{up:'用心滋養自己的身心靈，你的創造力和生命力都在蓬勃旺盛地生長，享受這份豐盛。',dn:'忽略了滋養自己的重要性，或過度依賴外界來填補內心的空缺，需要學習真正的自我關愛。'},
+    choice:{up:'這個選擇能帶來豐盛的回報和成果，是肥沃的土壤，能培育出你期待已久的美好未來。',dn:'這個選項的潛力目前受到限制，或可能讓你過度依賴他人，需保持足夠的獨立性再前進。'}
+  },
+  'IV':{
+    study:{up:'以紀律和結構性的學習為基礎，建立穩固的知識體系，成績將因此持續穩定提升。',dn:'學習方式過於死板僵化，缺乏彈性，需要嘗試更靈活的方法以突破現在的理解瓶頸。'},
+    love:{up:'在感情中提供穩定與安全感，以可靠的行動展現承諾，是穩固長期關係的最好方式。',dn:'在感情關係中過於強勢控制，對方感到壓抑無法喘氣，需要學習真正平等的溝通相處。'},
+    work:{up:'以強大的領導力和紀律推進工作，建立起可靠踏實的職場形象和穩固不搖的職業基礎。',dn:'管理方式過於獨裁，缺乏彈性和包容，導致團隊士氣低落或引發不必要的人際衝突。'},
+    fortune:{up:'穩定踏實的運勢，通過自律和持續的努力積累財富，你的基礎正在越來越穩固可靠。',dn:'因過於固執而錯失新的機會，需要在穩健的基礎上保持適度的靈活性才能持續進步。'},
+    soul:{up:'為內心世界建立秩序，以自律和自我掌控找回內心的平靜，你是自己最好的引路人。',dn:'過度控制情緒或壓抑感受，導致內心日趨僵化，允許自己偶爾放鬆和感受才是療癒之道。'},
+    choice:{up:'穩定而可靠的選擇，風險相對較低且有清晰的結構脈絡，非常適合追求安全感和長期穩定的你。',dn:'這個選擇可能過於僵化死板，缺乏成長和創新的空間，長遠來看可能讓你感到受困和受限。'}
+  },
+  'V':{
+    study:{up:'跟隨傳統且有效的學習方法，積極尋求老師或前輩的指導，這條路將帶來紮實的知識積累。',dn:'墨守成規導致學習停滯不前，需要打破固有的思維框架，嘗試新的學習途徑和方法。'},
+    love:{up:'以誠信、傳統和真誠的方式對待感情，尋求長期穩定的承諾，是建立深厚感情的基石。',dn:'因循傳統觀念而壓抑真實的感情，或在感情中過於保守不敢主動，讓緣分悄悄溜走。'},
+    work:{up:'遵循職場規範和倫理，積極尋求導師或資深同事的指引，傳統路線將帶來穩定可靠的成果。',dn:'過度依賴規則或仰賴權威，缺乏獨立思考的能力，在講求創新的環境中難以脫穎而出。'},
+    fortune:{up:'穩健保守的財務運勢，通過遵循既有規則和尋求專業建議積累財富，是最安全的方式。',dn:'固守傳統思維而錯失新興機會，需要在保持穩健的同時適度開放，接受新事物和新方法。'},
+    soul:{up:'在精神信仰或傳統智慧中找到心靈的依歸，尋求導師或靈性社群的指引是最好的滋養。',dn:'盲目跟從他人的信念而壓抑自己真正的靈性探索，需要找到真正屬於自己的精神道路。'},
+    choice:{up:'符合傳統和常規的穩健選擇，有前人走過的足跡可以參考，安全感較高且方向明確。',dn:'這個選擇過於保守，長期來看可能讓你錯失突破框架的重要機會，需評估自身的成長需求。'}
+  },
+  'VI':{
+    study:{up:'學習方向與個人的熱情和天賦高度契合，對所學的熱愛將成為最強大且持續的驅動力。',dn:'學習方向和自身的興趣嚴重不符，動力大幅不足，需誠實重新審視和調整學習目標方向。'},
+    love:{up:'深刻的心靈連結，一個重要的感情選擇即將到來，誠實跟隨內心做出最真實的決定。',dn:'關係中出現了價值觀的衝突，難以做出承諾，需要坦誠地面對自己真正渴望的感情樣貌。'},
+    work:{up:'工作充滿熱忱，與同事或合作夥伴形成良好的默契和信任，是攜手共創佳績的好時機。',dn:'工作關係出現價值觀上的重大分歧，難以有效協調，需要進行清晰而坦誠的溝通對話。'},
+    fortune:{up:'在你真正熱愛的事物上投入，將同時獲得深層的滿足感與豐富的物質財富雙重回報。',dn:'選擇困難導致機會不斷白白流失，需要做出明確的決定才能讓好的運勢繼續向前推進。'},
+    soul:{up:'找到了真正與你靈魂共鳴的人事物，內心感受到深刻的連結感和難得的完整與和諧。',dn:'在感情或內心信念上陷入兩難，價值觀的激烈衝突讓你難以找到內在真正的和諧與平靜。'},
+    choice:{up:'這個選擇與你內心真正的渴望高度契合，貓靈說：跟著心意走，不要想太多。',dn:'這個選項讓你感到難以取捨，可能涉及難以兩全的重大犧牲，需要仔細且誠實地衡量利弊。'}
+  },
+  'VII':{
+    study:{up:'全力衝刺，以強大且堅定的意志力克服所有學習障礙，勝利就在前方等著你。',dn:'衝勁過猛反而導致適得其反的效果，需放慢腳步調整策略，平衡好努力的程度與休息。'},
+    love:{up:'主動積極地追求，以堅定的意志力和清晰的行動力，朝著你心儀的感情目標勇敢前進。',dn:'在感情中過於強勢和控制，忽視了對方的感受和自主，需學習適時放手和給予空間。'},
+    work:{up:'以高度的專注力和強大的執行力推進工作，克服一切障礙，最終的勝利一定屬於你。',dn:'衝動行事或獨斷獨行，忽略了他人寶貴的意見，可能在職場上引發不必要的摩擦和對立。'},
+    fortune:{up:'積極主動地出擊，運勢正在配合你的行動和努力，成功是付出努力後必然的豐厚結果。',dn:'過度衝動導致判斷失誤，需要先冷靜下來評估全局，再謹慎採取下一步的行動。'},
+    soul:{up:'以強大的意志力勇敢突破心理障礙，持續向前，你比自己所意識到的要強大得多。',dn:'用蠻力壓制情緒而非真正處理問題，需要學習以智慧和溫柔來面對內心的挑戰和困境。'},
+    choice:{up:'這個選擇需要勇氣和強大的執行力，但貓靈告訴你：你完全有能力征服它，全力以赴！',dn:'選這個可能讓你陷入長期疲憊的競爭拉鋸，需先確認自己有足夠且持續的能量再前進。'}
+  },
+  'VIII':{
+    study:{up:'以溫柔和堅定的耐心面對學習難題，持之以恆的努力終將戰勝所有讓你頭痛的挑戰。',dn:'缺乏信心面對困難的科目，被恐懼和自我懷疑所拖累，需要有意識地重建對自己的學習自信。'},
+    love:{up:'以溫柔、包容和耐心維繫感情，用真愛的力量輕柔地化解關係中每一個困境。',dn:'恐懼和不安全感讓你在感情中不斷退縮，需要先學會真正地愛自己，才能好好地愛別人。'},
+    work:{up:'以溫和而堅定的方式影響職場氛圍，用耐心和包容處理複雜的人際關係和工作挑戰。',dn:'缺乏自信或被恐懼支配，在職場上顯得過度被動退縮，需要找回自己真正的內在力量。'},
+    fortune:{up:'以耐心和毅力慢慢積累財富，緩慢而穩定地克服所有阻礙，終將收穫你應得的成功。',dn:'信心嚴重不足讓你頻頻錯失良機，需要培養相信自己有能力把握好運的勇氣和信念。'},
+    soul:{up:'你擁有遠比自己意識到的更強大的內在力量，以溫柔而堅韌的方式好好擁抱自己吧。',dn:'被恐懼和自我批判不斷削弱力量，需要停止苛責自己，從今天開始練習溫柔對待自己。'},
+    choice:{up:'這個選擇需要你以耐心和毅力長期投入，但你完全具備這樣的能力，請相信自己。',dn:'這個選項可能嚴重挑戰你的自信，需要先確認自己在心理上已做好充分的準備才能前進。'}
+  },
+  'IX':{
+    study:{up:'獨自深入研究最適合你，安靜的環境讓學習效率倍增，向內探索知識的本質是你的強項。',dn:'過度孤立學習，拒絕請教他人，因此錯失了重要的觀點交流和寶貴的協作學習機會。'},
+    love:{up:'此時需要一段獨處的時間整理感情思緒，向內省察才能清楚地知道自己真正想要的是什麼。',dn:'過度退縮孤立，用刻意的距離來逃避親密，讓本來可能很好的緣分就這樣白白溜走了。'},
+    work:{up:'獨立的深度工作讓你能提供高品質的成果，你的智慧和洞察力在職場上非常值得被信賴。',dn:'過度孤立工作，拒絕與人合作，導致錯失團隊的重要支援資源和關鍵的合作發展機會。'},
+    fortune:{up:'此時宜靜不宜動，深思熟慮後做出的決定，將帶來比衝動行事更穩健踏實的好回報。',dn:'過度退縮消極，對眼前的機會視而不見，需要鼓起勇氣走出自我設限的陰影，向外邁步。'},
+    soul:{up:'獨處和深度內省是此刻最好的療癒方式，在安靜中你將找回自己真正的力量和生命方向。',dn:'陷入過度的孤立，用自我封閉逃避需要面對的問題，需要鼓起勇氣適時尋求他人的支持。'},
+    choice:{up:'這個選擇需要你一段時間的獨自深思，不要急於決定，在靜默的思考中答案會自然浮現。',dn:'這個選項可能使你更加孤立，選前需誠實思考它是否真的符合你對人際連結的深層需求。'}
+  },
+  'X':{
+    study:{up:'學業運勢正在轉向好的方向，即將進入全新的學習循環，此時把握時機將帶來重大突破。',dn:'面臨學習的低潮期，宜調整策略靜待時機轉變，不要因一時的挫折和困難就輕易放棄。'},
+    love:{up:'感情的命運之輪正在轉動，意想不到的好緣分即將進入你的生命，請保持開放的心。',dn:'感情正在遭遇逆境和低潮，但這正是命運重要的轉折點，低谷之後必定有重大轉機出現。'},
+    work:{up:'職場運勢正在向上轉動，新的機會即將接踵而來，保持靈活應變的心態積極把握。',dn:'職場環境正在劇烈變動，需要以靈活的應對能力和穩定的心態渡過這段充滿不確定的時期。'},
+    fortune:{up:'整體運勢正在向好的方向積極轉動，緊緊把握這波上升的趨勢，積極主動出擊。',dn:'運勢目前處於低谷，此時宜守不宜攻，沉住氣靜待下一波好運的自然到來。'},
+    soul:{up:'生命正在進入重要的全新循環，順應命運的自然流動，讓這次轉變帶你到更美好的地方。',dn:'抗拒命運不可避免的轉變讓你備感煎熬，學習放下執著，順流而行是目前最好的選擇。'},
+    choice:{up:'命運的能量在支持這個選擇，時機正好，不要再猶豫了，抓住這波上升的好運勇敢前進！',dn:'這個選擇的時機可能尚未成熟，等待運勢轉向後再採取行動，效果將會大幅提升。'}
+  },
+  'XI':{
+    study:{up:'一分耕耘必有一分收穫，你所有的努力將得到公平公正的評分和應有的好結果。',dn:'考試或學業結果可能不如預期，需誠實面對自身的不足，找出根本的問題所在加以修正。'},
+    love:{up:'感情中的公平與誠信最為重要，你真心付出的愛，終將得到對等而真誠的回應。',dn:'感情中存在著不公平的對待，需要誠實說出自己的真實需求，共同建立更平等健康的關係。'},
+    work:{up:'你的工作成果將得到公正且客觀的評價，付出的努力和才能都不會被輕易忽視。',dn:'在職場遭遇了不公正的對待或評價，需要以事實和理性的溝通來捍衛自己應得的權益。'},
+    fortune:{up:'因果律正在發揮作用，過去所有的努力和付出將得到公平應有的回報，公道自在人心。',dn:'負面的因果報應正在顯現，需誠實地審視自己近期的行為，並積極做出相應的調整和改變。'},
+    soul:{up:'誠實勇敢地面對內心的真相，接受生命公平的因果規律，這份接受將帶來真正深層的平靜。',dn:'逃避責任或持續自我欺騙，讓內心陷入不平靜和自我衝突，需鼓起勇氣誠實面對真實的自己。'},
+    choice:{up:'邏輯上最公平合理的選擇，深思熟慮後你會發現它完全符合你的核心價值觀和道德標準。',dn:'這個選擇可能涉及不公平或道德上的灰色地帶，需要非常仔細地評估其可能帶來的長期後果。'}
+  },
+  'XII':{
+    study:{up:'暫時放慢腳步，換個全新的角度重新審視你的學習方式，反而能帶來更深刻的領悟和理解。',dn:'無謂地在原地踏步不行動，拖延和逃避只會讓學業壓力像滾雪球一樣不斷積累和加重。'},
+    love:{up:'暫時停下來靜靜觀察和思考，不要急於推進關係，靜待觀察本身就是最好的答案。',dn:'在感情中進行無謂的犧牲和漫長等待，卻始終不採取任何行動，只是讓寶貴時間白白流逝。'},
+    work:{up:'換個視角重新看待工作困境，短暫的停頓和暫停反而能帶來更清晰的方向和創新的洞見。',dn:'工作長期陷入停滯，既不前進也不做出改變，無盡拖延只會讓問題越積越大越難解決。'},
+    fortune:{up:'此時宜靜觀其變，暫時放棄主動爭取，等待時機轉化後反而可能有意想不到的收穫。',dn:'運勢被自我懷疑和不斷猶豫所拖累，需要做出明確的決斷才能突破目前令人窒息的僵局。'},
+    soul:{up:'主動選擇暫停和反思，從截然不同的視角重新審視自己的人生路，將帶來深刻的頓悟和成長。',dn:'陷入被動的停滯，感到無力和茫然，需要找到內心真正的驅動力才能重新啟動前進的步伐。'},
+    choice:{up:'現在不是做出最終決定的最佳時機，暫時擱置等待更清晰的信號，往往比倉促決定更明智。',dn:'無限期地拖延只會讓好機會一個個流失，需要設定一個明確的截止期限，逼自己做出決定。'}
+  },
+  'XIII':{
+    study:{up:'舊有的學習方式和習慣必須畫上句點，以全新的策略和心態迎接嶄新的學習階段。',dn:'執著於已不適用的舊學習習慣，強烈抗拒必要的改變，這讓你無法真正向前進步。'},
+    love:{up:'感情正在進入深刻的轉化期，勇敢放下過去的模式和執念，才能讓關係煥然一新地重生。',dn:'執著於已逝去的感情，無法真正放手向前，需要學會道別才能敞開心扉迎接新的緣分。'},
+    work:{up:'職涯的重大轉化正在發生，勇敢結束舊的階段，才能迎來更適合你的全新工作機會。',dn:'強烈抗拒職場的必要變革，執著於已不再適合自己的工作方式，嚴重阻礙了自身的發展。'},
+    fortune:{up:'清除舊有的財務模式和不良習慣，才能為嶄新的財富積累和健康的財務生活清出空間。',dn:'固守舊有的財務思維和行為模式，強烈抗拒改變，讓財運長期停滯不前難以突破。'},
+    soul:{up:'讓所有不再服務你的想法和關係自然結束，轉化是通往新生最不可迴避的必要過程。',dn:'執著於過去的傷痛和失去，強烈抗拒放下，讓自己長期陷在舊傷的痛苦中無法自拔。'},
+    choice:{up:'這個選擇代表一個重要的終結和全新的開始，需要勇氣告別舊的，才能真正迎接新的到來。',dn:'選這個可能帶來痛苦而劇烈的轉變，需先確認自己已做好充分的心理準備去面對改變。'}
+  },
+  'XIV':{
+    study:{up:'平衡學習和適度休息，整合不同科目的知識，穩定有節奏的努力才是最有效的學習方式。',dn:'學習嚴重失衡，要麼過度用功燃燒殆盡，要麼完全放縱放棄，需要找到可持續的健康節奏。'},
+    love:{up:'以充分的耐心和真誠的包容調和關係中的差異，細水長流的愛最為真實持久美好。',dn:'感情關係出現嚴重的失衡，一方付出遠多於另一方，需要重新好好協商關係中的平衡點。'},
+    work:{up:'有效整合不同的工作方法和多方資源，以平衡而高效的方式穩步推進各項重要任務。',dn:'工作與生活嚴重失衡，或工作方式趨於極端，需要有意識地找回中道才能永續長期發展。'},
+    fortune:{up:'穩健均衡的理財策略將帶來長期穩定的財富增長，不急不徐的方式往往是最好的。',dn:'財務極端失衡，過度消費或過度節儉都不可取，需調整到更合理平衡的理財狀態和觀念。'},
+    soul:{up:'有意識地整合身心靈的各個面向，以溫和穩定的步伐慢慢走向真正內在的和諧與平衡。',dn:'內心嚴重失衡，情緒或生活方式趨於極端化，需要刻意練習和學習回歸中道的生活方式。'},
+    choice:{up:'這是最均衡穩健的選擇，雖然不是最刺激的，但長期來看卻是最可持續且最有保障的。',dn:'這個選項目前還不夠平衡完善，需要更多的調整和充分的準備，才能確保長期的成功。'}
+  },
+  'XV':{
+    study:{up:'看清究竟是什麼在真正束縛你的學習——可能是壞習慣或深層的恐懼——才能真正突破。',dn:'你已開始掙脫阻礙學習的惡習，覺醒後需要持續行動，別讓舊習慣再把你悄悄拉回去。'},
+    love:{up:'看清感情中讓你痛苦的真正束縛，需要勇敢地面對和承認關係中存在的黑暗面。',dn:'你已開始掙脫不健康的感情模式，覺醒是所有改變的第一步，需要繼續勇敢地向前行走。'},
+    work:{up:'認清職場中阻礙你成長的限制——可能是壞習慣或毒性環境——認清是改變一切的開始。',dn:'你已開始意識到工作中存在的不健康模式，覺醒的火花已點燃，需要持續推動改變。'},
+    fortune:{up:'看清阻礙財富積累的壞習慣和錯誤財務觀念，直視問題才能真正打破財務的困境。',dn:'你已開始慢慢擺脫不良財務習慣的束縛，改變正在真實地發生，需要持之以恆地堅持下去。'},
+    soul:{up:'鼓起勇氣面對自己的陰暗面和深層執念，這是靈魂成長中無可迴避的重要功課。',dn:'你正從根深蒂固的心理枷鎖中逐步解脫，覺醒的力量正在幫你一步步重獲真正的內心自由。'},
+    choice:{up:'這個選擇能幫助你看清並打破某個長期限制你的模式，雖然需要面對不舒服的真相。',dn:'選這個可能讓你陷入某種依賴或執念的泥沼，需要極其誠實地評估它是否真的對你有益。'}
+  },
+  'XVI':{
+    study:{up:'學業上的舊有結構即將突然崩塌，雖然令人震驚，但這是建立更好學習基礎的重要轉機。',dn:'學業上的衝擊已在逐漸緩解，開始慢慢從混亂中重建，找回學習的方向和應有的節奏。'},
+    love:{up:'感情中的舊有結構即將瓦解，雖然衝擊巨大，但能清除不健康的部分，讓關係有機會重新開始。',dn:'感情所受到的衝擊已過最激烈的高峰期，開始從廢墟中尋找重建新關係的可能和力量。'},
+    work:{up:'職場即將迎來重大且突然的變動，雖然令人不安，但也是打破舊框架迎來新機遇的珍貴契機。',dn:'職場最激烈的動盪已過高峰，開始慢慢從混亂的廢墟中找到重建和前進的清晰方向。'},
+    fortune:{up:'財務或整體運勢即將面臨突然的衝擊，需要快速做出應對並提前做好完善的緊急應變準備。',dn:'最糟糕的衝擊已漸漸過去，雖然元氣大傷，但開始慢慢看到了重建和完全復原的希望。'},
+    soul:{up:'內心深處的舊有信念和世界觀正在崩塌，雖然過程痛苦，但這是真實蛻變和靈魂成長的開始。',dn:'最激烈的內在動盪已過，開始從瓦礫中謹慎地撿起有用的部分，一磚一瓦地重建自我。'},
+    choice:{up:'這個選擇可能帶來劇烈且突然的改變，需確認自己有足夠的心理準備和應對能力再前進。',dn:'選這個的風險極高，可能帶來難以預料的衝擊，在做決定前需要非常謹慎地全面評估。'}
+  },
+  'XVII':{
+    study:{up:'充滿希望的學習能量，靈感源源不斷，以樂觀積極的心態面對學業，必能走向成功。',dn:'學習動力嚴重受挫，失去了對學業的信心，需要找到方法重新燃起最初的學習熱情和動力。'},
+    love:{up:'希望與療癒的感情能量環繞，心中的傷口正在慢慢癒合，美好的新感情即將悄然到來。',dn:'感情上失去了希望，需要給自己充分的時間療癒，真正相信愛情是開始療癒自己的第一步。'},
+    work:{up:'職涯充滿希望和光明，靈感和機會正在向你靠攏，保持樂觀積極的態度將吸引更多好運。',dn:'在工作中失去方向和動力，需要重新燃起對工作的熱情，找回最初選擇這份工作的初心。'},
+    fortune:{up:'好運正在緩慢但確定地向你靠近，保持希望和正向的心態，是迎接好運最好的準備。',dn:'運勢低迷，需要有意識地重新找回信心，相信好運終將到來，耐心是度過低潮的關鍵。'},
+    soul:{up:'心靈正在深深的療癒過程中，希望的光芒正在重新溫柔地照亮你曾經黑暗的內心世界。',dn:'靈魂感到深深的疲憊和迷失，需要有意識地尋找希望和光明，給自己充分的溫柔和耐心。'},
+    choice:{up:'充滿希望和正向美好能量的選擇，跟隨這個方向，將帶給你深刻的療癒和真實的成長。',dn:'目前對這個選擇缺乏真正的信心，需要先重建心中的希望感，才能真正全心投入其中。'}
+  },
+  'XVIII':{
+    study:{up:'考試充滿不確定性，需深入挖掘隱藏的知識盲點，直覺的感知有時比死記硬背更有用。',dn:'學習上的困惑和迷霧正在開始消散，被遮蔽的答案即將慢慢浮出水面，繼續耐心前行。'},
+    love:{up:'感情中充滿了不確定和幻象，需跟隨直覺但同時保持清醒，才能辨別真實和幻象。',dn:'感情中的迷霧終於開始逐漸散去，真相即將慢慢顯現，需要做好坦然面對現實的心理準備。'},
+    work:{up:'職場中存在許多隱藏的資訊和不確定的因素，需保持高度警覺，不要輕信事物的表面。',dn:'職場的混亂和諸多不確定性正在開始慢慢清晰，被隱藏的真相終將浮出水面，繼續耐心等待。'},
+    fortune:{up:'運勢充滿變數和難以預測的不確定性，此時不宜大手筆行動，靜觀其變是更明智的選擇。',dn:'混亂的運勢正在緩慢地開始清晰，黎明即將到來，耐心等待局勢完全明朗才是最好的策略。'},
+    soul:{up:'潛意識正在向你傳遞重要的訊息，夢境和直覺都值得用心解讀，它們藏有你需要的答案。',dn:'內心的迷霧和深層的恐懼正在緩慢消退，靈魂的清晰感正在一點一滴地慢慢回歸，繼續等待。'},
+    choice:{up:'這個選擇有許多不確定的因素，需要更多資訊和更充裕的時間才能看清全貌，勿倉促決定。',dn:'這個選項的迷霧正在開始散去，答案漸漸浮現，再給自己一點點時間就會更加清晰。'}
+  },
+  'XIX':{
+    study:{up:'學業運勢處於最佳巔峰，充滿旺盛的活力和強大的自信，全力衝刺必能獲得輝煌的成果。',dn:'學業的能量暫時減退，需要調整好作息補充精力，等狀態恢復後再全力衝刺也不遲。'},
+    love:{up:'感情充滿光明和喜悅，溫暖而真摯的愛意包圍著你，這是感情最幸福美好的燦爛時光。',dn:'感情的能量暫時黯淡下來，需要雙方一起努力，共同重新點燃關係中久違的陽光和溫暖。'},
+    work:{up:'工作運勢處於頂峰，充滿旺盛的活力和熱情，是展現最真實的自我和取得突出成就的最佳時機。',dn:'工作的能量和熱情暫時受到阻礙，需要找回對工作的核心熱愛，重新激發內心的鬥志。'},
+    fortune:{up:'整體運勢處於最佳時期，萬事如意順心，大膽積極行動將帶來豐碩而光明的豐厚回報。',dn:'運勢能量暫時下滑，需要養精蓄銳好好休息，等待下一波能量高峰到來再全力出擊。'},
+    soul:{up:'心靈充滿燦爛的光明和真摯的喜悅，生命力旺盛到頂點，你此刻與最真實的自己完全合一。',dn:'陽光般的溫暖能量暫時被雲層遮蔽，需要有意識地重新找回生活中的喜悅和感恩的心。'},
+    choice:{up:'這是充滿最耀眼光明和最強正向能量的選擇，貓靈強力推薦，選它前景一片燦爛光明！',dn:'這個選項目前能量不足時機稍差，等到狀態更佳時再啟動，效果將會大幅超越現在。'}
+  },
+  'XX':{
+    study:{up:'重要的學業評估和深刻的覺醒時刻，所有過去的努力將得到清晰明確的評判和應有的肯定。',dn:'錯過了關鍵的學習轉折點，或對自己能力的評估存在偏差，需重新審視和校正學習方向。'},
+    love:{up:'感情的重大覺醒時刻來臨，重新評估這段關係的深層意義，更高的召喚正在呼喚你前進。',dn:'在感情中錯失了關鍵的覺醒機會，或對感情的評估存在盲點，需重新誠實地審視雙方關係。'},
+    work:{up:'職涯的重要評估和覺醒時刻，你看清了真正的使命所在，重大且珍貴的機會正在熱切地召喚你。',dn:'錯過了職涯的重要轉折點，或對自身工作能力的評估嚴重失準，需重新定位和調整前進方向。'},
+    fortune:{up:'財富和運勢的重大評估期，所有過去的決策正在接受現實的檢驗，需誠實且勇敢地面對結果。',dn:'財務評估存在明顯的偏差，或對運勢的判斷嚴重失準，需徹底重新審視財務計畫和所有決策。'},
+    soul:{up:'靈魂正在接受更高層次的召喚，重大的內在覺醒讓你看清生命真正的深層目的和意義所在。',dn:'錯過了靈魂的關鍵覺醒機會，或仍在不斷的自我懷疑中掙扎，需給自己更多的信任和勇氣。'},
+    choice:{up:'這個選擇是一個深刻的覺醒和重要的轉化機會，更高的使命正在這條選擇的道路上耐心等待你。',dn:'這個選項可能讓你錯過重要的轉化良機，需要更深的自我覺察才能做出真正對的決定。'}
+  },
+  'XXI':{
+    study:{up:'學業即將迎來圓滿的成就和完美的結束，一個重要的學習階段即將畫下令人滿意的完美句點。',dn:'距離真正圓滿還差最關鍵的一步，千萬不要在最後關頭走捷徑，紮實完成每一個細節。'},
+    love:{up:'感情達到了完整的圓滿和深度的整合，這段關係是如此完整美好，值得好好珍惜和慶祝。',dn:'感情距離真正的圓滿還有些許缺口，需要耐心補全每一個細節，千萬不要急於宣告成功。'},
+    work:{up:'職涯達到了重要的圓滿里程碑，一個輝煌而成功的重要階段即將畫下完美的句點。',dn:'工作上距離真正完成還差臨門一腳，需要堅持補全每個細節和收尾，才能真正成功完成。'},
+    fortune:{up:'整體運勢達到頂峰的圓滿時刻，萬事都在往圓滿靠近，是慶祝和盡情享受成果的美好時光。',dn:'運勢距離完全圓滿還欠缺一些關鍵的東西，不要急著收割，繼續努力才能真正達到成功。'},
+    soul:{up:'靈魂達到了深刻的整合與真正的圓滿，一個重要的成長週期完美結束，嶄新的旅程即將開始。',dn:'靈魂的整合尚未完全完成，還有一些未解的課題需要處理，不要急著宣告完整，繼續深化。'},
+    choice:{up:'這是最圓滿完整的選擇，代表一個重要週期的完美收尾，選它你一定不會後悔，放心前進。',dn:'看似完美但可能還差關鍵的最後一步，需仔細確認所有細節都已真正準備妥當再做決定。'}
+  }
+};
+
+// ─── LUCK SCORES ──────────────────────────────────────────────────
+// [upright, reversed]
+const LUCK = {
+  'O':[68,30],'I':[85,40],'II':[62,35],'III':[88,38],'IV':[80,42],
+  'V':[70,38],'VI':[78,36],'VII':[84,40],'VIII':[82,38],'IX':[58,25],
+  'X':[75,40],'XI':[72,32],'XII':[45,22],'XIII':[52,28],'XIV':[74,38],
+  'XV':[38,55],'XVI':[30,45],'XVII':[90,30],'XVIII':[50,62],'XIX':[95,42],
+  'XX':[80,35],'XXI':[92,40]
+};
+
+// ─── SPREAD CATEGORIES ────────────────────────────────────────────
+const CATEGORIES = [
+  { id:'simple', name:'簡答牌陣', icon:'🎯',
+    spreads:[
+      { id:'yesno', name:'是非占卜', count:1, desc:'一張牌直接回應是或否',
+        cardWidth:'190px',
+        positions:[{name:'答案',desc:'貓靈給你的直接回應'}]},
+      { id:'choice', name:'選擇分析', count:0, desc:'幾個選項抽幾張，分析哪個更好並給好運%',
+        cardWidth:'145px',
+        positions:[] /* dynamic */}
+    ]
+  },
+  { id:'study', name:'學業牌陣', icon:'📚',
+    spreads:[
+      { id:'study-state', name:'學習狀態', count:3, desc:'了解目前的學習能量與困境',
+        cardWidth:'158px',
+        positions:[{name:'目前狀態',desc:'你現在的學習能量'},{name:'主要困難',desc:'阻礙你學習的關鍵'},{name:'貓靈建議',desc:'如何突破困境'}]},
+      { id:'exam', name:'考試準備', count:4, desc:'考前必抽，掌握考試能量',
+        cardWidth:'138px',
+        positions:[{name:'準備程度',desc:'備考狀態'},{name:'考試能量',desc:'考試當天的能量'},{name:'潛在阻礙',desc:'需注意的障礙'},{name:'結果走向',desc:'可能的結果'}]},
+      { id:'study-dir', name:'學習方向', count:3, desc:'找到最適合你的學習策略',
+        cardWidth:'158px',
+        positions:[{name:'我的優勢',desc:'天生的學習強項'},{name:'需改善',desc:'需加強的部分'},{name:'最佳策略',desc:'最適合你的學習方式'}]}
+    ]
+  },
+  { id:'love', name:'愛情牌陣', icon:'💕',
+    spreads:[
+      { id:'relationship', name:'關係現況', count:4, desc:'了解目前的感情狀態',
+        cardWidth:'138px',
+        positions:[{name:'你',desc:'你在關係中的狀態'},{name:'對方',desc:'對方的狀態'},{name:'關係現況',desc:'整體走向'},{name:'貓靈建議',desc:'如何讓關係更好'}]},
+      { id:'confession', name:'暗戀告白', count:3, desc:'告白前必抽，看清時機',
+        cardWidth:'158px',
+        positions:[{name:'對方感受',desc:'對方對你的感覺'},{name:'告白時機',desc:'現在告白的時機'},{name:'可能結果',desc:'告白後的走向'}]},
+      { id:'breakup', name:'分手與挽回', count:5, desc:'理清感情，做出正確決定',
+        cardWidth:'125px',
+        positions:[{name:'你的狀態',desc:'你現在的狀態'},{name:'對方狀態',desc:'對方的感受'},{name:'關係癥結',desc:'問題的核心'},{name:'挽回機率',desc:'是否有轉機'},{name:'建議行動',desc:'貓靈的行動指引'}]},
+      { id:'single-fate', name:'脫單預測', count:4, desc:'單身者必抽，預測脫單時機',
+        cardWidth:'138px',
+        positions:[{name:'感情能量',desc:'目前的感情能量'},{name:'阻礙關鍵',desc:'什麼阻礙了脫單'},{name:'提升吸引力',desc:'如何增加魅力'},{name:'脫單時機',desc:'可能脫單的時機'}]}
+    ]
+  },
+  { id:'work', name:'工作牌陣', icon:'💼',
+    spreads:[
+      { id:'work-state', name:'職場現況', count:3, desc:'了解目前的職場狀態',
+        cardWidth:'158px',
+        positions:[{name:'現況',desc:'目前的工作狀態'},{name:'挑戰',desc:'正在面對的挑戰'},{name:'機會',desc:'即將出現的機會'}]},
+      { id:'career-change', name:'轉職決策', count:4, desc:'轉職前的深度分析',
+        cardWidth:'138px',
+        positions:[{name:'現職情況',desc:'現在工作的能量'},{name:'新機會',desc:'新工作的潛力'},{name:'潛在障礙',desc:'轉職可能的困難'},{name:'建議行動',desc:'貓靈的決策建議'}]},
+      { id:'promotion', name:'升遷運勢', count:3, desc:'升職加薪運勢大揭密',
+        cardWidth:'158px',
+        positions:[{name:'準備程度',desc:'升遷準備度'},{name:'環境氛圍',desc:'職場對你的看法'},{name:'貓靈建議',desc:'如何提高升遷機率'}]}
+    ]
+  },
+  { id:'fortune', name:'運勢牌陣', icon:'⭐',
+    spreads:[
+      { id:'weekly', name:'本週運勢', count:3, desc:'掌握本週能量走向',
+        cardWidth:'158px',
+        positions:[{name:'本週主題',desc:'本週的核心能量'},{name:'需注意',desc:'本週需要警惕的事'},{name:'本週建議',desc:'貓靈的本週指引'}]},
+      { id:'overall', name:'整體運勢', count:5, desc:'五大面向全方位解析',
+        cardWidth:'125px',
+        positions:[{name:'整體運',desc:'整體能量與運勢'},{name:'財運',desc:'財務與物質運勢'},{name:'感情運',desc:'愛情與關係運勢'},{name:'事業運',desc:'工作與事業運勢'},{name:'健康運',desc:'身心健康狀態'}]},
+      { id:'near-future', name:'近期走向', count:3, desc:'預測近期的能量變化',
+        cardWidth:'158px',
+        positions:[{name:'近況能量',desc:'目前的整體能量'},{name:'即將到來',desc:'即將出現的機會'},{name:'需警惕',desc:'需要注意的事'}]}
+    ]
+  },
+  { id:'soul', name:'心靈淨化', icon:'🌙',
+    spreads:[
+      { id:'soul-state', name:'心靈現況', count:4, desc:'深入了解你的內心狀態',
+        cardWidth:'138px',
+        positions:[{name:'內心狀態',desc:'真實的內心感受'},{name:'需放下',desc:'是時候放下的事物'},{name:'需接受',desc:'需要接受的現實'},{name:'靈魂建議',desc:'貓靈給你的心靈雞湯'}]}
+    ]
+  }
+];
+
+// ─── STATE ────────────────────────────────────────────────────────
+let selCatId='simple', selSpreadId='yesno';
+let drawnCards=[], flippedSet=new Set(), isShuffling=false;
+let choiceOptions=['',''];
+
+// ─── STARFIELD ────────────────────────────────────────────────────
+(function(){
+  const canvas=document.getElementById('starCanvas'),ctx=canvas.getContext('2d');
+  let W,H,stars,parts;
+  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+  function build(){
+    stars=Array.from({length:220},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.4+.25,phase:Math.random()*Math.PI*2,freq:Math.random()*.018+.004}));
+    parts=Array.from({length:35},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.2+.4,vy:Math.random()*.55+.15,vx:(Math.random()-.5)*.4,gold:Math.random()>.45}));
+  }
+  resize();build();window.addEventListener('resize',()=>{resize();build();});
+  let f=0;(function tick(){ctx.clearRect(0,0,W,H);f++;
+    stars.forEach(s=>{const a=(Math.sin(f*s.freq+s.phase)+1)/2*.75+.1;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle=`rgba(240,201,106,${a})`;ctx.fill();});
+    parts.forEach(p=>{p.y-=p.vy;p.x+=p.vx;if(p.y<-5){p.y=H+5;p.x=Math.random()*W;}const a=Math.max(0,((H-p.y)/H)*.55);ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=p.gold?`rgba(212,168,67,${a})`:`rgba(168,85,247,${a})`;ctx.fill();});
+    requestAnimationFrame(tick);})();
+})();
+
+// ─── UTILS ────────────────────────────────────────────────────────
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function drawN(n){return shuffle(CARDS).slice(0,n).map(c=>({...c,isReversed:Math.random()>.5}));}
+function getCat(id){return CATEGORIES.find(c=>c.id===id);}
+function getSpread(cId,sId){return getCat(cId)?.spreads.find(s=>s.id===sId);}
+function getLuck(card){const l=LUCK[card.num]||[50,25];return card.isReversed?l[1]:l[0];}
+function luckClass(pct){return pct>=70?'high':pct>=45?'mid':'low';}
+
+// context-aware meaning
+function getMeaning(card,catId){
+  const ctx=CTX[card.num];if(!ctx)return card.isReversed?'逆位能量顯現，需謹慎面對當前局面。':'正位能量充沛，方向正確。';
+  const c=ctx[catId==='simple'?'choice':catId]||ctx['choice'];
+  return card.isReversed?c.dn:c.up;
+}
+
+// ─── CHOICE OPTIONS UI ────────────────────────────────────────────
+function renderChoiceInputs(){
+  const list=document.getElementById('coList');
+  const labels=['選項一','選項二','選項三','選項四'];
+  const placeholders=['例：留在現在的工作','例：接受新工作邀請','例：先休息一段時間','例：創業'];
+  list.innerHTML=choiceOptions.map((v,i)=>`
+    <div class="co-row">
+      <span class="co-label">${labels[i]}</span>
+      <input class="co-input" type="text" value="${v}" placeholder="${placeholders[i]||'輸入選項…'}" oninput="choiceOptions[${i}]=this.value">
+    </div>`).join('');
+  document.getElementById('coAddBtn').disabled=choiceOptions.length>=4;
+  document.getElementById('coRmBtn').disabled=choiceOptions.length<=2;
+}
+function addOption(){if(choiceOptions.length<4){choiceOptions.push('');renderChoiceInputs();}}
+function removeOption(){if(choiceOptions.length>2){choiceOptions.pop();renderChoiceInputs();}}
+
+// ─── SETUP UI ─────────────────────────────────────────────────────
+function buildCatTabs(){
+  document.getElementById('categoryTabs').innerHTML=CATEGORIES.map(c=>`
+    <div class="cat-tab ${c.id===selCatId?'active':''}" onclick="selCat('${c.id}')">
+      <div class="cat-icon">${c.icon}</div>
+      <div class="cat-name">${c.name}</div>
+    </div>`).join('');
+}
+function buildSpreadGrid(){
+  const cat=getCat(selCatId);
+  document.getElementById('spreadGrid').innerHTML=cat.spreads.map((s,i)=>`
+    <div class="spread-card ${s.id===selSpreadId?'active':''}" style="--si:${i*.07}s" onclick="selSpread('${s.id}')">
+      <div class="sc-name">${s.name}</div>
+      <div class="sc-count">${s.id==='choice'?'依選項張數':s.count+' 張'}</div>
+      <div class="sc-desc">${s.desc}</div>
+    </div>`).join('');
+  const showChoice=selCatId==='simple'&&selSpreadId==='choice';
+  document.getElementById('choiceSection').classList.toggle('hidden',!showChoice);
+  if(showChoice)renderChoiceInputs();
+}
+function selCat(id){selCatId=id;selSpreadId=getCat(id).spreads[0].id;buildCatTabs();buildSpreadGrid();}
+function selSpread(id){selSpreadId=id;buildSpreadGrid();}
+
+// ─── SHUFFLE ANIMATION ────────────────────────────────────────────
+function playShuffleAnim(callback){
+  const ov=document.getElementById('shuffleOverlay');
+  const sp=document.getElementById('spread');
+  const instr=document.getElementById('instructionText');
+  // reset animation so it replays on reshuffle
+  const cards=ov.querySelectorAll('.sov-card');
+  cards.forEach(c=>{c.style.animation='none';void c.offsetWidth;c.style.animation='';});
+  instr.style.opacity='0';
+  sp.style.visibility='hidden';sp.innerHTML='';
+  ov.classList.remove('hidden');
+  setTimeout(()=>{
+    ov.classList.add('hidden');
+    sp.style.visibility='';
+    instr.style.opacity='';
+    callback();
+  },1750);
+}
+
+// ─── BEGIN ────────────────────────────────────────────────────────
+function beginReading(){
+  document.getElementById('setupPanel').classList.add('hidden');
+  document.getElementById('readingArea').classList.remove('hidden');
+  const cat=getCat(selCatId),sp=getSpread(selCatId,selSpreadId);
+  document.getElementById('readingSpreadName').textContent=`${cat.icon} ${cat.name} · ${sp.name}`;
+  const q=document.getElementById('questionInput').value.trim();
+  const qEl=document.getElementById('readingQuestion');
+  if(q){qEl.textContent='「 '+q+' 」';qEl.classList.remove('hidden');}
+  else{qEl.classList.add('hidden');}
+  document.getElementById('readingArea').scrollIntoView({behavior:'smooth',block:'start'});
+  playShuffleAnim(()=>renderSpread());
+}
+function backToSetup(){
+  _currentSoulExtra=null;_historySaved=false;_shotAdviceOverride=null;
+  document.getElementById('readingArea').classList.add('hidden');
+  document.getElementById('setupPanel').classList.remove('hidden');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ─── RENDER SPREAD ────────────────────────────────────────────────
+function getPositions(){
+  if(selSpreadId==='choice'){
+    const opts=choiceOptions.filter(o=>o.trim());
+    const effective=opts.length>=2?opts:['選項一','選項二'];
+    return effective.map((o,i)=>({name:`選項${i+1}`,desc:o||`選項${i+1}`,optText:o}));
+  }
+  return getSpread(selCatId,selSpreadId)?.positions||[];
+}
+function renderSpread(){
+  const positions=getPositions();
+  const sp=getSpread(selCatId,selSpreadId);
+  drawnCards=drawN(positions.length);flippedSet.clear();
+  const el=document.getElementById('spread');
+  let cw=sp?.cardWidth||'140px';
+  if(selSpreadId==='choice'){const n=positions.length;cw=n<=2?'170px':n===3?'150px':'135px';}
+  el.style.setProperty('--card-w',cw);
+  el.innerHTML=drawnCards.map((card,i)=>buildSlot(card,i,positions[i])).join('');
+  updateReading();
+}
+function buildSlot(card,idx,pos){
+  const revClass=card.isReversed?'reversed':'';
+  const meaning=getMeaning(card,selCatId);
+  const tilt=((Math.random()-.5)*5).toFixed(1);
+  const optLine=pos.optText?`<div class="pos-opt">${pos.optText}</div>`:'';
+  return `<div class="slot" id="slot-${idx}" style="--d:${idx*.13}s;--tilt:${tilt}deg">
+    <div class="pos-badge">
+      <div class="pos-num">${idx+1}</div>
+      <div class="pos-name">${pos.name}</div>
+      ${optLine}
+    </div>
+    <div class="card-wrap" onclick="flipCard(${idx})" title="${pos.desc}">
+      <div class="card-inner" id="card-${idx}">
+        <div class="card-face card-back-face">
+          <div class="back-inner">
+            <div class="back-paw-grid">${'🐾'.repeat(12)}</div>
+            <div class="back-sigil">🐱</div>
+            <span class="back-corner tl">☽</span><span class="back-corner br">☾</span>
+          </div>
+        </div>
+        <div class="card-face card-front-face">
+          <div class="front-frame ${revClass}">
+            <div class="card-num">${card.num}</div>
+            <div class="card-art-box">
+              <div class="card-emoji-main">${card.main}</div>
+              <div class="card-emoji-sub">${card.sub}</div>
+            </div>
+            <div class="card-divider-line"></div>
+            <div class="card-name-text">${card.name}</div>
+            <div class="reversed-badge ${card.isReversed?'visible':''}">逆 位</div>
+            <div class="card-divider-line"></div>
+            <div class="card-meaning-text">${meaning}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ─── FLIP ─────────────────────────────────────────────────────────
+function flipCard(idx){
+  const el=document.getElementById(`card-${idx}`);if(!el)return;
+  if(flippedSet.has(idx)){el.classList.remove('flipped');flippedSet.delete(idx);}
+  else{el.classList.add('flipped');flippedSet.add(idx);}
+  updateReading();
+}
+
+// ─── READING PANEL ────────────────────────────────────────────────
+function updateReading(){
+  const content=document.getElementById('readingContent');
+  const positions=getPositions();
+  if(flippedSet.size===0){content.innerHTML='<p class="reading-empty">翻開任意牌面以查閱貓靈的訊息</p>';return;}
+
+  // YES/NO
+  if(selSpreadId==='yesno'&&flippedSet.has(0)){
+    const card=drawnCards[0],isYes=!card.isReversed;
+    const meaning=getMeaning(card,'simple');
+    content.innerHTML=`<div class="yesno-result">
+      <div class="yesno-answer ${isYes?'yes':'no'}">${isYes?'是':'否'}</div>
+      <div class="yesno-card-name">${card.main} ${card.num} ${card.name}${card.isReversed?' · 逆位':''}</div>
+      <div class="yesno-meaning">${meaning}</div>
+      <button class="shot-btn" onclick="openShotModal()" style="margin-top:8px">📸 &nbsp; 生成截圖卡片</button>
+    </div>`;
+    _shotAdviceOverride=meaning;
+    saveReadingHistory(meaning,isYes?'貓靈說：是 ✅':'貓靈說：否 ❌',isYes?'vibe-high':'vibe-low',getLuck(card));
+    buildConclusion();return;
+  }
+
+  // CHOICE ANALYSIS
+  if(selSpreadId==='choice'){
+    const flipped=[...flippedSet].sort((a,b)=>a-b);
+    const allFlipped=flippedSet.size===drawnCards.length;
+    let winnerIdx=-1,winnerPct=0;
+    if(allFlipped){flipped.forEach(i=>{const p=getLuck(drawnCards[i]);if(p>winnerPct){winnerPct=p;winnerIdx=i;}});}
+    const items=flipped.map((idx,i)=>{
+      const card=drawnCards[idx],pos=positions[idx];
+      const pct=getLuck(card),cls=luckClass(pct);
+      const isWinner=allFlipped&&idx===winnerIdx;
+      const meaning=getMeaning(card,'simple');
+      return `<div class="choice-item ${isWinner?'winner':''}" style="--rd:${i*.08}s">
+        <div class="ci-left">
+          <div class="ci-opt">${pos.name}${pos.optText?' · '+pos.optText:''}</div>
+          <div class="ci-card">${card.main} ${card.name}${card.isReversed?' (逆位)':''}</div>
+          <div class="ci-meaning">${meaning}</div>
+        </div>
+        <div class="ci-right">
+          <div class="ci-pct ${cls}">${pct}%</div>
+          <div class="ci-bar-wrap"><div class="ci-bar ${cls}" style="width:${pct}%"></div></div>
+          ${isWinner?'<div class="ci-crown">👑 推薦</div>':''}
+        </div>
+      </div>`;
+    }).join('');
+    const winnerLabel=positions[winnerIdx]?.optText||positions[winnerIdx]?.name||'';
+    const recommend=allFlipped?`<div class="choice-recommend">
+      <div class="cr-label">✦ &nbsp; 貓靈推薦 &nbsp; ✦</div>
+      <div class="cr-winner">${winnerLabel} &nbsp;｜&nbsp; 好運 ${winnerPct}%</div>
+    </div>
+    <button class="shot-btn" onclick="openShotModal()" style="margin:6px auto 0;display:block">📸 &nbsp; 生成截圖卡片</button>`:'';
+    if(allFlipped){
+      const advOverride=`貓靈推薦：${winnerLabel}（好運 ${winnerPct}%）`;
+      _shotAdviceOverride=advOverride;
+      saveReadingHistory(advOverride,`👑 ${winnerLabel} ${winnerPct}%`,winnerPct>=62?'vibe-high':'vibe-mid',winnerPct);
+    }
+    content.innerHTML=`<div class="choice-result">${items}${recommend}</div>`;buildConclusion();return;
+  }
+
+  // GENERAL
+  const items=[...flippedSet].sort((a,b)=>a-b).map((idx,i)=>{
+    const card=drawnCards[idx],pos=positions[idx];
+    const meaning=getMeaning(card,selCatId);
+    return `<div class="reading-item" style="--rd:${i*.08}s">
+      <div class="ri-pos">
+        <div class="ri-pos-name">${pos.name}</div>
+        <div class="ri-card-name">${card.main} ${card.name}</div>
+        ${card.isReversed?'<div class="ri-badge">逆 位</div>':''}
+      </div>
+      <div class="ri-meaning">${meaning}</div>
+    </div>`;
+  }).join('');
+  content.innerHTML=`<div class="reading-list">${items}</div>`;
+  buildConclusion();
+}
+
+// ─── CONCLUSION ───────────────────────────────────────────────────
+const ADVICE = {
+  study:{
+    high:'整體學業能量強旺，此刻的努力將獲得豐厚回報。保持當前節奏，主動把握每一個學習機會，結果令你滿意。',
+    mid:'學業能量中等，有進步空間。建議調整學習策略，找出最卡關的環節集中突破，穩步前進。',
+    low:'學業阻力較明顯，不要焦慮。先退一步找出根本原因，適度休息後重新出發，往往更有效率。'
+  },
+  love:{
+    high:'感情能量流動順暢，這是表達心意、深化關係的好時機。勇敢跟隨內心，真誠永遠是最好的語言。',
+    mid:'感情中有些地方值得梳理。保持耐心與真誠，給彼此一點空間，關係的方向會逐漸清晰。',
+    low:'感情遭遇阻力，先照顧好自己的內心狀態。穩住自己，才能看清楚關係真正需要的是什麼。'
+  },
+  work:{
+    high:'職場能量正向充沛，積極主動把握機會，你的努力與才能正在被看見，升遷或突破近在眼前。',
+    mid:'工作上有些波折，靈活應對是關鍵。不要急於求成，一步一步化解阻礙，紮實的基礎最終會開花。',
+    low:'職場能量偏低，謹慎行事為上。這段時間適合深蹲積累，避免倉促做出重大決定。'
+  },
+  fortune:{
+    high:'整體運勢明朗，好事正在醞釀。保持行動力與正向心態，機會來了要敢於把握。',
+    mid:'運勢處於過渡期，守中帶動。穩固基礎、不過度冒進，靜待時機成熟再出手。',
+    low:'目前運勢較低迷，是沉澱與準備的時期。把根基打穩，下一波好運來臨時你才能全力接住。'
+  },
+  soul:{
+    high:'心靈狀態充盈，內在能量正在支持你。繼續信任自己的直覺，這份流動會帶你到對的地方。',
+    mid:'心靈有些需要被照顧的地方。給自己多一點溫柔與空間，不用急著找到所有答案。',
+    low:'此刻需要深度滋養。優先照顧好自己，暫時放下外在的期望與壓力，從內心深處補充能量。'
+  },
+  simple:{
+    high:'整體能量正向，貓靈建議信任直覺，勇敢採取行動。',
+    mid:'情況尚在流動，保持觀察與彈性，適時調整步伐即可。',
+    low:'能量稍顯低迷，先穩住自己，靜待時機再評估下一步。'
+  }
+};
+
+const SOUL_ADVICE_POOL = {
+  high:[
+    '心靈狀態充盈，內在能量正在支持你前行。繼續信任自己的直覺，這份流動會帶你去對的地方。',
+    '你的內在正在散發溫柔的光。這是向外給予的好時機——你已有那份充足，可以好好分享了。',
+    '長期的積累正在開花。給自己一個真心的肯定：你做到了，而且比你以為的還要好得多。',
+    '內心的清明是最珍貴的禮物。用這份清醒去創造、去連結、去愛——你已經準備好了。',
+  ],
+  mid:[
+    '心靈有些地方需要被好好照顧。給自己多一點溫柔與空間，不用急著找到所有的答案。',
+    '你正站在一個轉折點，方向還不清晰——但你已經在移動了，這就已經足夠了，繼續走。',
+    '此刻的感受很真實，不必假裝沒事。允許自己停下來看清楚，才能知道下一步往哪走。',
+    '混亂是新秩序誕生前的模樣。不要太快否定這段感受，它正在醞釀某個重要的轉變。',
+  ],
+  low:[
+    '此刻需要深度滋養。暫時放下外在的期望與壓力，先從內心深處補充能量，再一步步出發。',
+    '能量低落不是失敗，而是一個訊號。你的靈魂在提醒你：你值得被好好對待，從自己開始。',
+    '你不需要現在就撐起所有事。讓自己真正休息，不帶任何愧疚——休息本身就是生產力。',
+    '黑暗不是終點，而是沉澱的時間。允許自己在這裡待一會兒，根紮得更深，春天來了你才接得住。',
+    '「做不到」不等於「不夠好」。你在扛的比別人看見的多很多，先照顧好自己，其他的之後再說。',
+  ]
+};
+const SOUL_EXTRAS = [
+  {type:'✨ 名言金句',text:'「傷口是光進來的地方。」— 魯米（Rumi）'},
+  {type:'✨ 名言金句',text:'「你正在尋找的，也正在尋找你。」— 魯米（Rumi）'},
+  {type:'✨ 名言金句',text:'「你不需要完整才值得被愛。」— 布芮尼·布朗（Brené Brown）'},
+  {type:'✨ 名言金句',text:'「你無法憎恨自己走向美好的生命。」— 安·拉莫特（Anne Lamott）'},
+  {type:'✨ 名言金句',text:'「你的任務不是尋找愛，而是找出你內心所有阻礙愛的牆。」— 魯米（Rumi）'},
+  {type:'✨ 名言金句',text:'「去做你害怕的事，恐懼就會消失。」— 拉爾夫·沃爾多·愛默生'},
+  {type:'🍵 心靈雞湯',text:'成長不是直線。有時候後退，是為了讓根紮得更深——等到春天，你就知道那個冬天值得了。'},
+  {type:'🍵 心靈雞湯',text:'不是所有的事都需要答案。有時候，學會帶著問題好好生活，本身就是一種成熟。'},
+  {type:'🍵 心靈雞湯',text:'你有多久沒有對自己說：「你已經做得很好了」？今天，就說一次吧。'},
+  {type:'🍵 心靈雞湯',text:'放下不代表不在乎。而是明白了：有些事你盡力了，結果不由你決定——那就放心交出去。'},
+  {type:'🍵 心靈雞湯',text:'你不需要變成另一個人才能開始過你想要的生活。你現在，就可以開始了。'},
+  {type:'🎬 推薦電影',text:'《靈魂急轉彎》Soul (2020) — 關於「活著的意義」與「找回自己」，輕柔而深刻。'},
+  {type:'🎬 推薦電影',text:'《千與千尋》Spirited Away (2001) — 找回自己的名字，才能找回自己。'},
+  {type:'🎬 推薦電影',text:'《練習曲》Island Etude (2007) — 「有些事現在不做，一輩子都不會做了。」'},
+  {type:'🎬 推薦電影',text:'《心靈捕手》Good Will Hunting (1997) — 「這不是你的錯。」有時候一句話就夠了。'},
+  {type:'📚 推薦閱讀',text:'《被討厭的勇氣》— 你的痛苦來自人際關係，你的自由也在那裡。阿德勒的溫柔革命。'},
+  {type:'📚 推薦閱讀',text:'《當下的力量》— 把注意力帶回現在，絕大多數的焦慮都消失在此刻。'},
+  {type:'📚 推薦閱讀',text:'《你所說的我都明白，但那還是很難》— 給那些懂道理、但還是卡住了的你。'},
+  {type:'📚 推薦閱讀',text:'《心靈地圖》The Road Less Traveled — 關於成長、痛苦與愛，如何讓人成為更完整的自己。'},
+  {type:'📺 推薦劇集',text:'《Fleabag》(BBC, 2016) — 笑著笑著就哭了。關於破碎與自我修復，沒有比這更誠實的作品。'},
+  {type:'📺 推薦劇集',text:'《Normal People》(2020) — 兩個人如何在愛與傷中，拼命成為更完整的自己。'},
+  {type:'📺 推薦劇集',text:'《我的天才女友》My Brilliant Friend — 關於認同、掙扎與在關係中找到自己的漫長旅程。'},
+];
+let _currentSoulExtra = null;
+let _historySaved = false;
+let _shotAdviceOverride = null;
+
+const ACTION_TIPS = {
+  study:['準備一份詳細的複習計畫','找一個學習夥伴互相督促','每天設定專注學習的固定時段'],
+  love:['主動傳一則真誠的訊息','安排一次面對面的深度對話','給自己和對方多一點耐心與空間'],
+  work:['列出本週最重要的三件事','主動向主管或同事尋求一次回饋','清理積累已久的待辦事項'],
+  fortune:['寫下三件讓你感恩的事，提升正向頻率','把一個擱置已久的計畫付諸實行','整理環境，創造流動的空間'],
+  soul:['每天給自己10分鐘的安靜時間','用文字記錄內心的感受與渴望','做一件純粹讓自己快樂的小事'],
+  simple:['把思考寫下來，清晰度大幅提升','和一位信任的朋友聊聊你的狀況','今天就採取一個最小可行的行動']
+};
+
+function buildConclusion(){
+  const cp=document.getElementById('conclusionPanel');
+  // Not applicable for single-card or choice spreads
+  if(selSpreadId==='yesno'||selSpreadId==='choice'){cp.innerHTML='';cp.classList.add('hidden');return;}
+  // Only show when all cards flipped
+  if(flippedSet.size!==drawnCards.length){cp.innerHTML='';cp.classList.add('hidden');return;}
+
+  const positions=getPositions();
+  const question=document.getElementById('questionInput').value.trim();
+  const scores=drawnCards.map(c=>getLuck(c));
+  const avg=Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);
+  const reversedCount=drawnCards.filter(c=>c.isReversed).length;
+
+  // Vibe
+  let vibeText,vibeClass;
+  if(avg>=75){vibeText='光明強旺 ✨';vibeClass='vibe-high';}
+  else if(avg>=62){vibeText='穩中向好 🌟';vibeClass='vibe-good';}
+  else if(avg>=48){vibeText='平衡待調 ⚖️';vibeClass='vibe-mid';}
+  else{vibeText='能量低潮 🌙';vibeClass='vibe-low';}
+
+  const tier=avg>=62?'high':avg>=48?'mid':'low';
+  const catKey=selCatId==='simple'?'simple':selCatId;
+  const isSoul=catKey==='soul';
+  const advicePool=isSoul?SOUL_ADVICE_POOL[tier]:[ADVICE.soul?ADVICE[catKey]?.[tier]:null].filter(Boolean);
+  const adviceText=isSoul
+    ? SOUL_ADVICE_POOL[tier][Math.floor(Math.random()*SOUL_ADVICE_POOL[tier].length)]
+    : (ADVICE[catKey]||ADVICE.simple)[tier];
+  const tips=ACTION_TIPS[catKey]||ACTION_TIPS.simple;
+  const tip=tips[Math.floor(Math.random()*tips.length)];
+  _currentSoulExtra=isSoul?SOUL_EXTRAS[Math.floor(Math.random()*SOUL_EXTRAS.length)]:null;
+
+  // Narrative rows
+  const narrativeRows=drawnCards.map((card,i)=>{
+    const pos=positions[i];
+    const meaning=getMeaning(card,selCatId);
+    const snippet=meaning.split('，')[0].substring(0,28);
+    return `<div class="cn-part" style="--np:${i*.07+.1}s">
+      <div class="cn-pos-tag">【${pos.name}】</div>
+      <div class="cn-card-snippet"><span class="cn-card-name">${card.main} ${card.name}${card.isReversed?' · 逆位':''}</span> — ${snippet}${meaning.length>28?'…':''}</div>
+    </div>`;
+  }).join('');
+
+  const qLine=question?`<div class="cn-question">針對你的問題：<span>「${question}」</span></div>`:'';
+  const revNote=reversedCount>=Math.ceil(drawnCards.length/2)?
+    `<div class="cn-reversed-note">⚠️ 此次逆位牌較多（${reversedCount}/${drawnCards.length}張），代表能量受阻或需要向內調整，建議放慢腳步，優先做好內在梳理再往前走。</div>`:'';
+
+  cp.innerHTML=`<div class="conclusion-panel">
+    <div class="conclusion-header">
+      <span class="ch-deco">✦ &nbsp; 貓靈綜合結論 &nbsp; ✦</span>
+      <div class="ch-title">問題解析</div>
+    </div>
+    ${qLine}
+    <div class="cn-energy-row">
+      <span class="cn-vibe ${vibeClass}">${vibeText}</span>
+      <span class="cn-score">整體能量 ${avg}%</span>
+    </div>
+    <div class="cn-divider"></div>
+    <div class="cn-narrative">${narrativeRows}</div>
+    ${revNote}
+    <div class="cn-advice">
+      <div class="cna-label">🐾 &nbsp; 貓靈建議</div>
+      <div class="cna-text">${adviceText}</div>
+      <div class="cna-action">✦ 今日行動提示：${tip}。</div>
+    </div>
+    ${_currentSoulExtra?`<div class="soul-extra"><div class="se-type">${_currentSoulExtra.type}</div><div class="se-text">${_currentSoulExtra.text}</div></div>`:''}
+    <button class="shot-btn" onclick="openShotModal()">📸 &nbsp; 生成截圖卡片</button>
+  </div>`;
+  cp.classList.remove('hidden');
+  saveReadingHistory(adviceText,vibeText,vibeClass,avg);
+}
+
+// ─── HISTORY ──────────────────────────────────────────────────────
+const HIST_KEY='catTarotHistory';
+function saveReadingHistory(adviceText,vibeText,vibeClass,avg){
+  if(_historySaved)return;
+  _historySaved=true;
+  const positions=getPositions();
+  const question=document.getElementById('questionInput').value.trim();
+  const sp=getSpread(selCatId,selSpreadId);
+  const catNames={study:'學業牌陣',love:'愛情牌陣',work:'工作牌陣',fortune:'運勢牌陣',soul:'心靈淨化',simple:'簡答牌陣'};
+  saveHistory({
+    date:new Date().toLocaleString('zh-TW',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).replace(',',''),
+    catName:catNames[selCatId]||selCatId,
+    spreadName:sp?.name||selSpreadId,
+    question,energy:avg,vibe:vibeText,vibeClass,
+    cards:drawnCards.map((c,i)=>({num:c.num,name:c.name,main:c.main,isReversed:c.isReversed,posName:positions[i]?.name||''})),
+    advice:adviceText
+  });
+}
+function saveHistory(entry){
+  let arr=JSON.parse(localStorage.getItem(HIST_KEY)||'[]');
+  arr.unshift(entry);
+  if(arr.length>5)arr=arr.slice(0,5);
+  localStorage.setItem(HIST_KEY,JSON.stringify(arr));
+}
+function loadHistory(){return JSON.parse(localStorage.getItem(HIST_KEY)||'[]');}
+function toggleHistory(){
+  const panel=document.getElementById('histPanel');
+  if(panel.classList.contains('hidden')){
+    panel.classList.remove('hidden');
+    renderHistory();
+  }else{panel.classList.add('hidden');}
+}
+function renderHistory(){
+  const panel=document.getElementById('histPanel');
+  const arr=loadHistory();
+  if(!arr.length){panel.innerHTML='<p class="hist-empty">尚無占卜紀錄</p>';return;}
+  panel.innerHTML=arr.map((e,i)=>{
+    const cardRows=e.cards.map((c,ci)=>`<div class="hec-row"><span class="hec-pos">【${c.posName||`牌${ci+1}`}】</span>${c.main} ${c.name}${c.isReversed?' · 逆位':''}</div>`).join('');
+    return `<div class="hist-entry">
+      <div class="he-summary" onclick="toggleHistDetail(${i})">
+        <div class="he-left">
+          <div class="he-date">${e.date}</div>
+          <div class="he-spread">${e.catName} · ${e.spreadName}</div>
+          ${e.question?`<div class="he-question">「${e.question}」</div>`:''}
+        </div>
+        <div class="he-right">
+          <div class="he-energy">✨ ${e.energy}%</div>
+          <div class="he-arrow" id="hea-${i}">▾</div>
+        </div>
+      </div>
+      <div class="he-detail" id="hed-${i}">
+        <div class="he-cards-list">${cardRows}</div>
+        <div class="he-advice-text">${e.advice}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function toggleHistDetail(i){
+  const d=document.getElementById(`hed-${i}`),a=document.getElementById(`hea-${i}`);
+  d.classList.toggle('open');a.classList.toggle('open');
+}
+
+// ─── SCREENSHOT MODAL ─────────────────────────────────────────────
+let _shotText='';
+function openShotModal(){
+  const positions=getPositions();
+  const question=document.getElementById('questionInput').value.trim();
+  const sp=getSpread(selCatId,selSpreadId);
+  const catNames={study:'學業牌陣',love:'愛情牌陣',work:'工作牌陣',fortune:'運勢牌陣',soul:'心靈淨化',simple:'簡答牌陣'};
+  const scores=drawnCards.map(c=>getLuck(c));
+  const avg=Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);
+  let vibeText,vibeClass;
+  if(avg>=75){vibeText='光明強旺 ✨';vibeClass='vibe-high';}
+  else if(avg>=62){vibeText='穩中向好 🌟';vibeClass='vibe-good';}
+  else if(avg>=48){vibeText='平衡待調 ⚖️';vibeClass='vibe-mid';}
+  else{vibeText='能量低潮 🌙';vibeClass='vibe-low';}
+  const catKey=selCatId==='simple'?'simple':selCatId;
+  const tier=avg>=62?'high':avg>=48?'mid':'low';
+  const isSoulShot=catKey==='soul';
+  const adviceText=_shotAdviceOverride||(isSoulShot
+    ? SOUL_ADVICE_POOL[tier][Math.floor(Math.random()*SOUL_ADVICE_POOL[tier].length)]
+    : (ADVICE[catKey]||ADVICE.simple)[tier]);
+  const now=new Date().toLocaleString('zh-TW',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false});
+  const cardRows=drawnCards.map((card,i)=>{
+    const pos=positions[i];
+    const meaning=getMeaning(card,selCatId);
+    const snippet=meaning.substring(0,40)+(meaning.length>40?'…':'');
+    const optLine=pos.optText?`<div class="shc-opt">${pos.optText}</div>`:'';
+    return `<div class="sh-card-row">
+      <div class="shc-pos">【${pos.name}】</div>
+      <div class="shc-detail">
+        ${optLine}
+        <div class="shc-name">${card.main} ${card.name}${card.isReversed?' · 逆位':''}</div>
+        <div class="shc-meaning">${snippet}</div>
+      </div>
+    </div>`;
+  }).join('');
+  const qLine=question?`<div class="sh-question"><span>✦ 問題</span>${question}</div>`:'';
+
+  // plain text version for clipboard
+  const textLines=[`🐾 貓咪塔羅 占卜結果`,`${now}  ${catNames[selCatId]||''} · ${sp?.name||''}`,``];
+  if(question)textLines.push(`問題：${question}`,``);
+  drawnCards.forEach((c,i)=>{
+    const pos=positions[i];
+    const optTxt=pos.optText?` (${pos.optText})`:'';
+    textLines.push(`【${pos.name}${optTxt}】${c.main}${c.name}${c.isReversed?' (逆位)':''}  ${getMeaning(c,selCatId).substring(0,35)}…`);
+  });
+  textLines.push(``,`整體能量 ${avg}%  ${vibeText}`,``,`貓靈建議：${adviceText}`);
+  if(_currentSoulExtra)textLines.push(``,`${_currentSoulExtra.type}`,`${_currentSoulExtra.text}`);
+  _shotText=textLines.join('\n');
+
+  const extraHtml=_currentSoulExtra?`<div class="sh-extra">
+    <div class="sh-extra-type">${_currentSoulExtra.type}</div>
+    <div class="sh-extra-text">${_currentSoulExtra.text}</div>
+  </div>`:'';
+
+  document.getElementById('shotCard').innerHTML=`
+    <div class="sh-header">
+      <div class="sh-title">🐾 貓咪塔羅 占卜結果</div>
+      <div class="sh-meta">${now} &nbsp;｜&nbsp; ${catNames[selCatId]||''} · ${sp?.name||''}</div>
+    </div>
+    ${qLine}
+    <div class="sh-cards">${cardRows}</div>
+    <div class="sh-energy">
+      <span class="sh-vibe ${vibeClass}">${vibeText}</span>
+      <span class="sh-energy-pct">整體能量 ${avg}%</span>
+    </div>
+    <div class="sh-advice">
+      <span class="sh-advice-label">🐾 貓靈建議</span>
+      ${adviceText}
+    </div>
+    ${extraHtml}
+    <div class="sh-footer">🐾 貓咪塔羅 · 貓靈神諭 🐾</div>`;
+  // reset share button state
+  const sb=document.getElementById('saShareBtn');
+  if(sb){sb.innerHTML='📤 &nbsp; 儲存 / 分享圖片';sb.disabled=false;}
+  document.getElementById('shotModal').classList.remove('hidden');
+}
+function closeShotModal(){document.getElementById('shotModal').classList.add('hidden');}
+function handleShotModalClick(e){if(e.target===e.currentTarget)closeShotModal();}
+function copyShotText(){
+  navigator.clipboard.writeText(_shotText).then(()=>{
+    const btn=document.querySelector('.sa-copy');
+    btn.textContent='✅ 已複製！';
+    setTimeout(()=>{btn.innerHTML='📋 &nbsp; 複製文字版';},2000);
+  }).catch(()=>{alert('請手動複製：\n\n'+_shotText);});
+}
+async function saveOrShareImage(){
+  const btn=document.getElementById('saShareBtn');
+  btn.innerHTML='⏳ &nbsp; 處理中…';btn.disabled=true;
+  const card=document.getElementById('shotCard');
+  // temporarily lift scroll constraint so full content is captured
+  const prevMaxH=card.style.maxHeight,prevOvY=card.style.overflowY;
+  card.style.maxHeight='none';card.style.overflowY='visible';
+  try{
+    await document.fonts.ready;
+    const canvas=await html2canvas(card,{scale:2,backgroundColor:'#080318',useCORS:true,allowTaint:true,logging:false});
+    card.style.maxHeight=prevMaxH;card.style.overflowY=prevOvY;
+    canvas.toBlob(async blob=>{
+      const file=new File([blob],'貓咪塔羅占卜.png',{type:'image/png'});
+      if(navigator.canShare&&navigator.canShare({files:[file]})){
+        try{await navigator.share({files:[file],title:'貓咪塔羅占卜結果',text:'🐾 我的貓靈神諭結果'});}
+        catch(e){if(e.name!=='AbortError')downloadBlob(blob);}
+      }else{downloadBlob(blob);}
+      btn.innerHTML='✅ &nbsp; 完成！';
+      setTimeout(()=>{btn.innerHTML='📤 &nbsp; 儲存 / 分享圖片';btn.disabled=false;},2500);
+    },'image/png');
+  }catch(err){
+    card.style.maxHeight=prevMaxH;card.style.overflowY=prevOvY;
+    console.error(err);
+    btn.innerHTML='📤 &nbsp; 儲存 / 分享圖片';btn.disabled=false;
+    alert('截圖產生失敗，請直接手動截圖。');
+  }
+}
+function downloadBlob(blob){
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='貓咪塔羅占卜.png';a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ─── RESHUFFLE ────────────────────────────────────────────────────
+function reshuffleCards(){
+  if(isShuffling)return;isShuffling=true;
+  _currentSoulExtra=null;_historySaved=false;_shotAdviceOverride=null;
+  const cp=document.getElementById('conclusionPanel');cp.innerHTML='';cp.classList.add('hidden');
+  document.querySelectorAll('.slot').forEach((s,i)=>{s.style.animationDelay=`${i*.06}s`;s.classList.add('shuffle-out');});
+  setTimeout(()=>{playShuffleAnim(()=>{renderSpread();isShuffling=false;});},520);
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────
+buildCatTabs();buildSpreadGrid();
+</script>
+</body>
+</html>
