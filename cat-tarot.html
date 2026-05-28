@@ -898,6 +898,9 @@ function beginReading(){
 }
 function backToSetup(){
   _currentSoulExtra=null;_historySaved=false;_shotAdviceOverride=null;
+  document.getElementById('questionInput').value='';
+  choiceOptions=['',''];
+  renderChoiceInputs();
   document.getElementById('readingArea').classList.add('hidden');
   document.getElementById('setupPanel').classList.remove('hidden');
   window.scrollTo({top:0,behavior:'smooth'});
